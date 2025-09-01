@@ -3,3 +3,8 @@
 target/
 dbt_packages/
 package-lock.yml
+dbt_internal_packages/
+logs/
+.user.yml
+dbt_cloud.yml
+profiles.yml
