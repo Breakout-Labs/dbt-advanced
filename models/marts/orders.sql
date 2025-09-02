@@ -23,10 +23,11 @@ joined as (
     select
         orders.order_id,
         orders.customer_id,
-        stores.store_name,
         orders.ordered_at,
         orders.order_status,
         orders.total_amount,
+        orders.store_id,
+        stores.store_name,
         datediff(
             'minutes', orders.ordered_at, deliveries_filtered.delivered_at
         ) as delivery_time_from_order,
