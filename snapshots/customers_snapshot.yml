@@ -1,0 +1,14 @@
+snapshots:
+  - name: customers_snapshot
+    relation: source('ecomm', 'customers')
+    config:
+      schema: snapshots
+      #database: analytics
+      unique_key: id
+      strategy: check
+      check_cols:
+        - FIRST_NAME
+        - LAST_NAME
+        - EMAIL
+        - ADDRESS
+        - PHONE_NUMBER
