@@ -14,26 +14,23 @@ renamed as (
 
 normalize_order_status as (
     select
-        *,
-        -- quick & dirty, will fix later - Mike
-        case 
-            when order_status ilike any(
-                'ordered', 'order_created') then 'Ordered'
-            when lower(order_status) in ('shipped', 'sent')
-                then 'Shipped'
-            when lower(order_status) = 'pending' or lower(order_status) in ('waiting', 'processing', 'payment_pending') then 'Pending'
-            when order_status = 'canceled' or 
-            order_status = 'cancelled' then 'Canceled'
-            when order_status = 'delivered' then 'Delivered'
-            else
-                'Unknown'
-        end as order_status_normalized
-    from renamed
+        r.*,
+        coalesce(s.order_status_normalized, 'Unknown') as order_status
+    from renamed r
+    left outer join {{ ref('order_status') }} s on s.order_status = r.order_status
+),
+
+add_store as (
+    select 
+        nos.* ,
+        s.store_name
+    from normalize_order_status nos
+    left outer join {{ ref('stores') }} s on s.store_id = nos.store_id
 ),
 
 final as (
     select *
-    from normalize_order_status
+    from add_store
 )
 
 select *
