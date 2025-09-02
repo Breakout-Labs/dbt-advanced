@@ -3,6 +3,20 @@ with source as (
     from {{ source('ecomm', 'orders') }}
 ),
 
+/*
+
+lag_calculation as (
+    select
+    --_synced_at,
+    --created_at,
+    datediff(day,created_at,_synced_at) as order_lag,
+    count(*) as amount_lag
+    from {{source('ecomm', 'orders')}}
+    group by 1
+),
+
+*/
+
 renamed as (
     select
         *,
