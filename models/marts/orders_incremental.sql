@@ -1,11 +1,25 @@
+{{
+    config(
+        materialized='incremental',
+        unique_id = 'order_id'
+    )
+}}
+
 with orders as (
     select *
     from {{ ref('stg_ecomm__orders') }}
+
+    {% if is_incremental() %}
+    -- this filter will only be applied on an incremental run
+    where ordered_at >= (select dateadd(day, -3, max(ordered_at)) from {{ this }})
+    {% endif %}
+
 ),
 
 deliveries as (
     select *
     from {{ ref('stg_ecomm__deliveries') }}
+
 ),
 
 deliveries_filtered as (

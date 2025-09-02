@@ -12,23 +12,18 @@ renamed as (
     from source
 ),
 
+order_status as (select * from {{ ref('order_status') }} ),
+
 normalize_order_status as (
     select
-        *,
-        -- quick & dirty, will fix later - Mike
-        case 
-            when order_status ilike any(
-                'ordered', 'order_created') then 'Ordered'
-            when lower(order_status) in ('shipped', 'sent')
-                then 'Shipped'
-            when lower(order_status) = 'pending' or lower(order_status) in ('waiting', 'processing', 'payment_pending') then 'Pending'
-            when order_status = 'canceled' or 
-            order_status = 'cancelled' then 'Canceled'
-            when order_status = 'delivered' then 'Delivered'
-            else
-                'Unknown'
-        end as order_status_normalized
-    from renamed
+        r.*,
+        -- case
+        -- when r.order_status is null then 'Unkown'
+        -- else o.final_status
+        -- end as final_status
+        coalesce(o.final_status, 'Unknown') as final_status
+    from renamed r
+    left join order_status o on o.order_status = r.order_status
 ),
 
 final as (
