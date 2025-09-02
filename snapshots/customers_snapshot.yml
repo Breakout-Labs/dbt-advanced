@@ -1,0 +1,9 @@
+snapshots:
+  - name: customers_snapshot
+    relation: source('ecomm', 'customers')
+    description: Daily snapshot of the customers table
+    config:
+      unique_key: id
+      strategy: check
+      check_cols: all
+      schema: snapshots
