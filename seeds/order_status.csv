@@ -1,0 +1,12 @@
+order_status,order_status_fixed
+ordered,ordered
+order_created,ordered
+shipped,shipped
+sent,shipped
+pending,pending
+waiting,pending
+processing,pending
+payment_pending,pending
+canceled,canceled
+cancelled,canceled
+delivered,delivered
