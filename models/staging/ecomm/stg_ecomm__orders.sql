@@ -30,7 +30,7 @@ store_mapping as (
 normalize_order_status as (
     select
         store_mapping.*,
-        coalesce(order_status.order_status_normalized, 'Unknown') as order_status
+        coalesce(order_status.order_status_normalized, 'Unknown')
     from store_mapping
     left join order_status
     on order_status.order_status = lower(store_mapping.order_status)
