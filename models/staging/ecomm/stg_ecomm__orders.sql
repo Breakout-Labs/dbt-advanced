@@ -24,7 +24,7 @@ store_mapping as (
 normalize_order_status as (
     select
         store_mapping.*,
-        order_status.order_status_normalized
+        order_status.order_status_normalized --might have to include the default unknown status?
     from store_mapping
     left join order_status
     on order_status.order_status = store_mapping.order_status
