@@ -1,6 +1,13 @@
 with source as (
-    select *
-    from {{ source('ecomm', 'orders') }}
+    {{
+    dbt_utils.union_relations(
+        relations=[
+            source('ecomm', 'orders_us'),
+            source('ecomm', 'orders_de'),
+            source('ecomm', 'orders_au')
+        ],
+    )
+}}
 ),
 
 renamed as (
