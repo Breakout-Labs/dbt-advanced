@@ -1,0 +1,15 @@
+snapshots:
+  - name: snapshots_customers_source
+    relation: source('ecomm', 'customers')
+    config:
+      schema: snapshots
+      strategy: check
+      unique_key: id
+      check_cols: 'all'
+  - name: snapshots_orders_source
+    relation:  source('ecomm', 'orders_us')
+    config:
+      schema: snapshots
+      strategy: timestamp
+      unique_key: id
+      updated_at: _synced_at

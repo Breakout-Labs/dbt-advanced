@@ -1,6 +1,22 @@
-with source as (
-    select *
-    from {{ source('ecomm', 'orders_us') }}
+{{
+    dbt_utils.union_relations(
+        relations=[
+            source('ecomm', 'orders_us'),
+            source('ecomm', 'orders_de'),
+            source('ecomm', 'orders_au')
+        ],
+    )
+}},
+
+add_store_id as (
+    select
+        * exclude (store_id),    -- Omit original store_id column
+        case
+            when _dbt_source_relation ilike '%orders_us' then 1
+            when _dbt_source_relation ilike '%orders_de' then 2
+            when _dbt_source_relation ilike '%orders_au' then 3
+        end as store_id            -- Add calculated store_id
+    from sources
 ),
 
 renamed as (
