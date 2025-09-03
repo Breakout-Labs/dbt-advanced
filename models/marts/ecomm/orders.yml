@@ -2,6 +2,8 @@ version: 2
 
 models:
   - name: orders
+    config:
+      snowflake_warehouse: "TRANSFORMING_S"
     columns:
       - name: order_id
         tests:
