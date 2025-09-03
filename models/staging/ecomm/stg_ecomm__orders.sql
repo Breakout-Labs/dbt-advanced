@@ -2,11 +2,29 @@ with stores as (
     select * from {{ ref('stores') }}
 ),
 source as (
-    select *
-    from {{ source('ecomm', 'orders') }}
+    {{
+        dbt_utils.union_relations(
+            relations=[
+                source('ecomm', 'orders_us'),
+                source('ecomm', 'orders_de'),
+                source('ecomm', 'orders_au')
+            ],
+        )
+    }}
 ),
 order_status as (
     select * from {{ ref('order_status')}}
+),
+
+store_id as (
+    select
+        * exclude (store_id),
+        case
+            when _dbt_source_relation ilike '%orders_us%' then 1
+            when _dbt_source_relation ilike '%orders_de%' then 2
+            when _dbt_source_relation ilike '%orders_au%' then 3
+        end as store_id
+    from source
 ),
 
 renamed as (
@@ -15,7 +33,7 @@ renamed as (
         id as order_id,
         created_at as ordered_at,
         status as order_status
-    from source
+    from store_id
 ),
 
 store_mapping as (
@@ -41,5 +59,11 @@ final as (
     from normalize_order_status
 )
 
-select *
-from final
+
+{{
+    dbt_utils.deduplicate(
+        relation='final',
+        partition_by='order_id',
+        order_by='_synced_at desc'
+    )
+}}
