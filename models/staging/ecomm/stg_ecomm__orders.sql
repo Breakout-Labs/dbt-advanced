@@ -12,7 +12,8 @@ with source as (
 
 renamed as (
     select
-        *,
+        * exclude (store_id),
+        _dbt_source_relation as source_table,        
         id as order_id,
         created_at as ordered_at,
         status as order_status
@@ -34,7 +35,12 @@ normalize_order_status as (
             when order_status = 'delivered' then 'Delivered'
             else
                 'Unknown'
-        end as order_status_normalized
+        end as order_status_normalized,
+        case    
+            when right(source_table,2) = 'de' then 2
+            when right(source_table,2) = 'au' then 3
+            else 1 --us country
+        end as store_id
     from renamed
 ),
 
