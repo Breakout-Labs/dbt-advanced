@@ -1,6 +1,6 @@
 with orders as (
     select *
-    from {{ ref('orders') }}
+    from {{ ref('mrt_ecomm__orders') }}
 ),
 
 customers as (
