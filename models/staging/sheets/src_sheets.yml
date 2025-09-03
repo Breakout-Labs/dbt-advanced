@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  
+  - name: sheets
+    database: raw
+    tables:
+      - name: customer_survey_responses
