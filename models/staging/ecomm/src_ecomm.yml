@@ -1,0 +1,36 @@
+version: 2
+
+sources:
+  - name: ecomm
+    database: raw
+    tables:
+      - name: orders_us
+        description: Each record in this table represents an order in our ecommerce store in the US
+        columns:
+          - name: id
+            tests:
+              - not_null
+              - unique
+      - name: orders_de
+        description: Each record in this table represents an order in our ecommerce store in Germany
+        columns:
+          - name: id
+            tests:
+              - unique
+              - not_null
+      - name: orders_au
+        description: Each record in this table represents an order in our ecommerce store in Australia
+        columns:
+          - name: id
+            tests:
+              - unique:
+                  config:
+                    severity: warn
+              - not_null
+      - name: deliveries
+        description: Each record in this table represents an order delivery in our ecommerce application.
+      - name: customers
+        description: Each record in this table represents a customer in our ecommerce application.
+        columns:
+          - name: id
+            description: '{{ doc("customer_id") }}'
