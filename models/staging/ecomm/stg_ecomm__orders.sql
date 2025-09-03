@@ -1,4 +1,19 @@
-with stores as (
+with source as (
+    {{
+        dbt_utils.union_relations(
+            relations=[
+                source('ecomm', 'orders_us'),
+                source('ecomm', 'orders_de'),
+                source('ecomm', 'orders_au')
+            ],
+        )
+    }}
+),
+
+
+
+
+stores as (
     select * from {{ ref('stores') }}
 ),
 source as (
