@@ -23,6 +23,12 @@ source as (
 order_status as (
     select * from {{ ref('order_status')}}
 ),
+
+
+
+
+
+
 renamed as (
     select
         *,
