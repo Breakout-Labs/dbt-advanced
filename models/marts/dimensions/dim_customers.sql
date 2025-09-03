@@ -1,6 +1,6 @@
 with orders as (
     select *
-    from {{ ref('orders') }}
+    from {{ ref('fct_orders') }}
 ),
 
 customers as (

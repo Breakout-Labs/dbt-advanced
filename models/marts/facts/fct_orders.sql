@@ -1,3 +1,8 @@
+{{
+    config(
+        snowflake_warehouse = 'TRANSFORMING_S'
+    )
+}}
 with orders as (
     select *
     from {{ ref('stg_ecomm__orders') }}
@@ -33,8 +38,8 @@ joined as (
             deliveries_filtered.picked_up_at,
             deliveries_filtered.delivered_at
         ) as delivery_time_from_collection,
-        orders.store_id
-        stores.store_name,
+        orders.store_id,
+        stores.store_name
     from orders
     left join deliveries_filtered
         on orders.order_id = deliveries_filtered.order_id

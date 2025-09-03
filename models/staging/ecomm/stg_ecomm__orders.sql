@@ -1,28 +1,33 @@
 with source as (
-    select *
-    from {{ source('ecomm', 'orders') }}
+    {{
+    dbt_utils.union_relations(
+        relations=[
+            source('ecomm', 'orders_us'),
+            source('ecomm', 'orders_de'),
+            source('ecomm', 'orders_au')
+        ],
+    )
+}}
+
 ),
 
-/*
-
-lag_calculation as (
-    select
-    --_synced_at,
-    --created_at,
-    datediff(day,created_at,_synced_at) as order_lag,
-    count(*) as amount_lag
-    from {{source('ecomm', 'orders')}}
-    group by 1
+source_with_store_id as (
+    select 
+    * exclude (store_id), 
+    case
+        when _dbt_source_relation = 'raw.ecomm.orders_de' then 2
+        when _dbt_source_relation = 'raw.ecomm.orders_us' then 3
+        else store_id
+    end as store_id
+    from source
 ),
-
-*/
 
 renamed as (
     select
         *,
         id as order_id,
         created_at as ordered_at
-    from source
+    from source_with_store_id
 ),
 
 order_status as (
