@@ -12,7 +12,7 @@ with source as (
 
 renamed as (
     select
-        * exclude (store_id),
+        *,
         _dbt_source_relation as source_table,        
         id as order_id,
         created_at as ordered_at,
@@ -22,7 +22,7 @@ renamed as (
 
 normalize_order_status as (
     select
-        *,
+        * exclude (store_id),
         -- quick & dirty, will fix later - Mike
         case 
             when order_status ilike any(
@@ -44,10 +44,15 @@ normalize_order_status as (
     from renamed
 ),
 
-final as (
-    select *
-    from normalize_order_status
+deduplicated as (
+    {{
+        dbt_utils.deduplicate(
+            relation='normalize_order_status',
+            partition_by='order_id',
+            order_by='_synced_at desc'
+        )
+    }}
 )
 
 select *
-from final
+from deduplicated
