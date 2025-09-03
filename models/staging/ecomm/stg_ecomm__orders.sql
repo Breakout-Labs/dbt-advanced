@@ -10,10 +10,6 @@ with sources as (
     }}
 ),
 
-order_status as (
-    select * from {{ ref('order_status')}}
-),
-
 add_store_id as (
     select
         * exclude (store_id),    -- Omit original store_id column
@@ -25,17 +21,6 @@ add_store_id as (
     from sources
 ),
 
-
-stores as (
-    select * from {{ ref('stores') }}
-),
-
-
-
-
-
-
-
 renamed as (
     select
         *,
@@ -44,25 +29,17 @@ renamed as (
         status as order_status
     from sources
 ),
-store_mapping as (
-    select
-        renamed.*,
-        stores.store_name
-    from renamed
-    left join stores
-    on stores.store_id = renamed.store_id
-),
-normalize_order_status as (
-    select
-        store_mapping.*,
-        order_status.order_status_normalized
-    from store_mapping
-    left join order_status
-    on order_status.order_status = store_mapping.order_status
-),
-final as (
-    select *
-    from normalize_order_status
+
+deduplicated as (
+    {{
+        dbt_utils.deduplicate(
+            relation='renamed',
+            partition_by='order_id',
+            order_by='_synced_at desc'
+        )
+    }}
 )
-select *
-from final
+
+select
+    *
+from deduplicated
