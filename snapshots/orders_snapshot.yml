@@ -1,6 +1,6 @@
 snapshots:
   - name: orders_snapshot
-    relation: source('ecomm', 'orders')
+    relation: source('ecomm', 'orders_us')
     description: Daily snapshot of the customers table
     config:
       unique_key: id
