@@ -3,7 +3,7 @@ with stores as (
 ),
 source as (
     select *
-    from {{ source('ecomm', 'orders') }}
+    from {{ source('ecomm', 'orders_us') }}
 ),
 order_status as (
     select * from {{ ref('order_status')}}

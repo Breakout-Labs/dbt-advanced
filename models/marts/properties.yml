@@ -30,7 +30,7 @@ models:
     columns:
       - name: order_id
         tests:
-          - unique
+         
           - not_null
       - name: delivery_time_from_collection
         tests:
