@@ -1,6 +1,13 @@
 with source as (
-    select *
-    from {{ source('ecomm', 'orders') }}
+    {{
+        dbt_utils.union_relations(
+            relations=[
+                source('ecomm', 'orders_us'),
+                source('ecomm', 'orders_de'),
+                source('ecomm', 'orders_au')
+            ],
+        )
+    }}
 ),
 
 order_status as (
@@ -20,7 +27,7 @@ renamed as (
 normalize_order_status as (
     select
         renamed.*,
-        coalesce(order_status.order_status_normalized, 'Unknown') as order_status
+        coalesce(order_status.order_status_normalized, 'Unknown') as order_status_normalized
     from renamed
     left join order_status on (
         lower(renamed.status) = order_status.order_status
