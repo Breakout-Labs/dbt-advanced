@@ -1,8 +1,0 @@
-snapshots:
-  - name: order_snapshot
-    relation: source('ecomm', 'orders')
-    config:
-      unique_key: id
-      strategy: timestamp
-      updated_at: _synced_at
-      schema: snapshots
