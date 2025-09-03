@@ -1,6 +1,13 @@
 with source as (
-    select *
-    from {{ source('ecomm', 'orders') }}
+    {{
+    dbt_utils.union_relations(
+        relations=[
+            source('ecomm', 'orders_us'),
+            source('ecomm', 'orders_de'),
+            source('ecomm', 'orders_au')
+        ],
+    )
+}}
 ),
 
 renamed as (
@@ -30,9 +37,19 @@ normalize_order_status as (
     left join normalized_statusses on renamed.order_status = normalized_statusses.raw_status
 ),
 
+deduplicated as (
+    {{
+        dbt_utils.deduplicate(
+            relation='normalize_order_status',
+            partition_by='order_id',
+            order_by='_synced_at desc'
+        )
+    }}
+),
+
 final as (
     select *
-    from normalize_order_status
+    from deduplicated
 )
 
 select *

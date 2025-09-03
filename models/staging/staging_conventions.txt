@@ -1,0 +1,32 @@
+Staging: 
+- naming convention is respected
+- folder substructure looks good
+
+Marts: 
+- subfolder structure missing
+- could use prefixes (fct or trf)
+
+
+Sources.yml:
+- have one sources.yml per source sub-folder
+- properly filled out column descriptions
+
+Properties.yml
+- have one properties.yml file per marts subfolder
+
+
+Task 2.3: 
+- generate_surrogate_key: 
+    - generate unique keys for tables that dont have them
+    - generate easier joins on a single column using generate_surrogate_key
+- deduplicate:
+    - 
+    - advantages towards select distinct is that you can define specific columns as duplicates (e.g. a synced_at timestamp or sth that is not the same)
+- expression_is_true
+    - whenever you have a (e.g. algebraic) requirement that multiple columns need to fulfill
+- at_least_one:
+    - remove obsolete columns
+
+Task 2.4: 
+- union_relations
+- 
