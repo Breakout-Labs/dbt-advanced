@@ -16,6 +16,12 @@ clean-targets:
   - "target"
   - "dbt_packages"
 
+
+
 models:
-  +query_tag: 'dbt_course'
+  dbt_training:
+    +persist_docs:
+      relation: true
+      columns: true
+    +query_tag: 'dbt_course'
 
