@@ -17,6 +17,7 @@ clean-targets:
   - "dbt_packages"
 
 models:
+  +query_tag: 'dbt_course'
   +on_schema_change: "sync_all_columns"
   dbt_training:
     #staging:
