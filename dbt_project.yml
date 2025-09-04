@@ -16,7 +16,8 @@ clean-targets:
   - "target"
   - "dbt_packages"
 
-models:
+models:  
+  +query_tag: 'dbt_course'    
   dbt_training:
     #staging:
     #  +materialized: view
