@@ -1,0 +1,32 @@
+Staging
+- naming convention is respoected
+- folder substructure looks good
+
+Marts
+- subfolders are missing
+- prefixes are missing (fct, dim)?
+
+Sources.yml
+- have one yml per source as subfolders
+- filled out column descriptions
+
+Properties.yml
+- have one yml per source as subfolders
+
+
+
+Specific macros
+
+generate_surrogate_key
+- generate unique key for tables that do not have one
+- generate easier joins on a single column using generate_surrogate_key
+
+deduplicate
+- deduplicate on vaues based onsth like a distinct key (remove e.g. duplicates with only a different timestamp)
+
+expression_is_true
+- check for requirements on the column
+
+at_least_one
+- prevent empty rows / remove obsolete columns
+- for incremental models ?

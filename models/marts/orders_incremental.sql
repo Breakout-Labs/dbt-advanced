@@ -1,12 +1,17 @@
 {{
     config(
-        materialized='table'
+        materialized='incremental',
+        unique_key='order_id'
     )
 }}
 
 with orders as (
     select *
     from {{ ref('stg_ecomm__orders_us') }}
+    {% if is_incremental() %}
+        --where ordered_at > (select max(ordered_at) from {{ this }})
+        where ordered_at >= (select dateadd(day,-3,max(ordered_at)) from {{ this }})
+    {% endif %}
 ),
 
 deliveries as (
@@ -28,15 +33,12 @@ stores as (
 
 joined as (
     select
-        {{ dbt_utils.generate_surrogate_key(['orders.order_id']) }} as pk_orders,
-        {{ dbt_utils.generate_surrogate_key(['customer_id']) }} as hk_customer,
-        greatest_ignore_nulls(orders._synced_at, deliveries_filtered._synced_at) as source_last_updated,
-        current_timestamp() as last_updated,
         orders.order_id,
         orders.customer_id,
         orders.ordered_at,
         orders.order_status,
         orders.total_amount,
+        orders._synced_at,
         stores.store_name,
         datediff(
             'minutes', orders.ordered_at, deliveries_filtered.delivered_at
@@ -58,9 +60,11 @@ final as (
     from joined
 )
 
-select *
-from final
-
 --select 
---    max(datediff('day',orders.created_at,orders._synced_at)) as datedifference
+--    datediff('day',orders.created_at,orders._synced_at) as datedifference
 --from orders
+
+
+select
+    *
+from final
