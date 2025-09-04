@@ -1,6 +1,25 @@
 with source as (
-    select *
-    from {{ source('ecomm', 'orders_us') }}
+    {{ 
+        dbt_utils.union_relations(
+            relations=[
+                source('ecomm', 'orders_us'),
+                source('ecomm', 'orders_de'),
+                source('ecomm', 'orders_au')
+            ]
+        )
+    }}
+),
+
+add_store_id as (
+    select
+        * exclude (store_id),    -- Omit original store_id column
+        case
+            when _dbt_source_relation ilike '%orders_us' then 1
+            when _dbt_source_relation ilike '%orders_de' then 2
+            when _dbt_source_relation ilike '%orders_au' then 3
+        end as store_id,           -- Add calculated store_id
+        current_timestamp() as "ExecutionTime"  -- Add ExecutionTime in UTC
+    from source
 ),
 
 renamed as (
@@ -9,7 +28,8 @@ renamed as (
         id as order_id,
         created_at as ordered_at,
         status as order_status
-    from source
+
+    from add_store_id  -- Changed from source to add_store_id
 ),
 
 normalize_order_status as (

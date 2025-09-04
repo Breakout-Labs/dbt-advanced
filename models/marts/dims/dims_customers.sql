@@ -4,7 +4,8 @@ with orders as (
 ),
 
 customers as (
-    select *
+    select *,
+    {{ dbt_utils.generate_surrogate_key(['customer_id']) }} as hk_customer
     from {{ ref('stg_ecomm__customers') }}
 ),
 

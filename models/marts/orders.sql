@@ -6,7 +6,8 @@
 }}
 
 with orders as (
-    select *
+    select *,
+    {{ dbt_utils.generate_surrogate_key(['order_id']) }} as pk_orders,
     from {{ ref('stg_ecomm__orders') }}
 
 {% if is_incremental() %}
