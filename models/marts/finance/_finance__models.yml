@@ -66,3 +66,6 @@ models:
         data_type: timestamp_ltz
         description: "Last update time"
 
+      - name: days_since_last_order
+        data_type: number
+
