@@ -1,4 +1,4 @@
-version: 2
+notversion: 2
 
 models:
   - name: mrt_ecomm__customers
@@ -30,14 +30,74 @@ models:
     description: Each record represents a customer. Hierarchical materialization.
 
   - name: mrt_ecomm__orders
+    description: "orders table"
+
+    versions:
+      - v: 1
+
+    config:
+      contract:
+        enforced: true
+
     columns:
       - name: order_id
+        data_type: varchar
+        description: ""
+
+      - name: customer_id
+        data_type: number
+        description: ""
+      
+      - name: ordered_at
+        data_type: timestamp_ntz
+        description: ""
+
+      - name: order_status
+        data_type: varchar
+        description: ""
+
+      - name: total_amount
+        data_type: float
+        description: ""
+
+      - name: store_id
+        data_type: number
+        description: ""
+
+      - name: store_name
+        data_type: varchar
+        description: ""
+
+      - name: delivery_time_from_order
+        data_type: number
+        description: "Time in X from collection of orders"
+        tests:
+          - greater_than_zero
+
+      - name: delivery_time_from_collection
+        data_type: number
+        description: "Time in X from collection of orders"
+        tests:
+          - greater_than_zero
+
+      - name: source_last_updated
+        data_type: timestamp_ntz
+        description: ""
+
+      - name: pk_orders
+        constraints:
+          - type: primary_key
+        data_type: varchar
+        description: "Primary key for orders table"
         tests:
           - unique
+
+      - name: hk_customer
+        data_type: varchar
+        description: "Foreign key to customers table"
+        tests:
           - not_null
-      - name: delivery_time_from_collection
-        tests:
-          - greater_than_zero
-      - name: delivery_time_from_order
-        tests:
-          - greater_than_zero
+
+      - name: last_updated
+        data_type: timestamp_ltz
+        description: ""
