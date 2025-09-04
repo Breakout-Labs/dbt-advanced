@@ -31,13 +31,15 @@ joined as (
         orders.order_status,
         orders.total_amount,
         datediff(
-            'minutes', orders.ordered_at, deliveries_filtered.delivered_at
+            'day', orders.ordered_at, deliveries_filtered.delivered_at
         ) as delivery_time_from_order,
         datediff(
-            'minutes',
+            'day',
             deliveries_filtered.picked_up_at,
             deliveries_filtered.delivered_at
         ) as delivery_time_from_collection,
+
+        datediff('day', lag(orders.ordered_at) over (partition by orders.customer_id order by orders.ordered_at asc), orders.ordered_at) as days_since_last_order,
         greatest_ignore_nulls(orders._synced_at, deliveries_filtered._synced_at) as source_last_updated,
         current_timestamp() as last_updated
     from orders

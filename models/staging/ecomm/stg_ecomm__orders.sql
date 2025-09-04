@@ -61,7 +61,7 @@ select
 from deduplicated
 
 /*
-or just 
+or skip deduplicated and fina select and do just 
     {{
         dbt_utils.deduplicate(
             relation='add_store',
