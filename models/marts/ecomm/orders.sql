@@ -1,5 +1,13 @@
 with orders as (
-    select *
+    select *,
+    datediff(
+        'day',
+                lag(ordered_at) over (
+            partition by customer_id
+            order by ordered_at
+            ) ,
+        ordered_at     
+    ) as days_since_last_order
     from {{ ref('stg_ecomm__orders') }}
 ),
 
@@ -20,6 +28,7 @@ joined as (
         {{ dbt_utils.generate_surrogate_key(['orders.customer_id']) }} as hk_customer,
         greatest_ignore_nulls(orders._synced_at, deliveries_filtered._synced_at) as source_last_updated,
         current_timestamp() as last_updated,
+        orders.days_since_last_order,
         orders.order_id,
         orders.customer_id,
         orders.ordered_at,

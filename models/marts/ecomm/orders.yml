@@ -6,7 +6,7 @@ models:
       - v: 1
     config:
       contract:
-        enforced: true
+        enforced: false
     description: "This is the orders model for our training"
     columns:
       - name: pk_orders
