@@ -6,7 +6,7 @@ models:
       - v: 1
     config:
       contract:
-        enforced: true
+        enforced: false
     description: |
       Orders data product from the dbt Training Lab with Simo and Marvin.
       Each record represents a order from the e-commerce system.

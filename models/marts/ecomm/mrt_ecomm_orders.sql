@@ -42,7 +42,14 @@ joined as (
             deliveries_filtered.picked_up_at,
             deliveries_filtered.delivered_at
         ) as delivery_time_from_collection,
-        greatest_ignore_nulls(orders._synced_at, deliveries_filtered._synced_at) as source_last_updated
+        greatest_ignore_nulls(orders._synced_at, deliveries_filtered._synced_at) as source_last_updated,
+        datediff(
+            'day',
+            lag(ordered_at) over (
+                partition by orders.customer_id
+                order by orders.ordered_at asc
+            ),ordered_at)
+        as days_since_last_order
     from orders
     left join deliveries_filtered
         on orders.order_id = deliveries_filtered.order_id
@@ -60,3 +67,4 @@ final as (
 
 select *
 from final
+order by customer_id, ordered_at
