@@ -2,14 +2,63 @@ version: 2
 
 models:
   - name: orders
+    versions:
+      - v: 1
+    description: "orders table"
+    config:
+      contract:
+        enforced: true
     columns:
-      - name: order_id
+      - name: pk_orders
+        data_type: varchar
+        description: "primary key"
         tests:
           - unique
           - not_null
-      - name: delivery_time_from_collection
-        tests:
-          - greater_than_zero
+        constraints:
+        - type: primary_key
+
       - name: delivery_time_from_order
+        data_type: number
+        description: ""
         tests:
           - greater_than_zero
+
+      - name: delivery_time_from_collection
+        data_type: number
+        description: ""
+        tests:
+          - greater_than_zero
+
+      - name: hk_customer
+        data_type: varchar
+        description: ""
+
+      - name: order_id
+        data_type: varchar
+        description: "order id"
+
+      - name: customer_id
+        data_type: number
+        description: ""
+
+      - name: ordered_at
+        data_type: timestamp_ntz
+        description: ""
+
+      - name: order_status
+        data_type: varchar
+        description: ""
+
+      - name: total_amount
+        data_type: float
+        description: ""
+
+      - name: source_last_updated
+        data_type: timestamp_ntz
+        description: ""
+
+      - name: last_updated
+        data_type: timestamp_ltz
+        description: "last data refresh"
+
