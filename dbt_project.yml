@@ -19,9 +19,9 @@ clean-targets:
 models:
   dbt_training:
     #staging:
-    #  +materialized: view
+    +materialized: table
     +query_tag: 'dbt_course'
-
+    
     +persist_docs:
       relation: true
       columns: true

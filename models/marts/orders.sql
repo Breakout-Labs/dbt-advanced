@@ -1,5 +1,17 @@
+{{ config(materialized='table') }}
+
 with orders as (
-    select *
+    select
+        *,
+        --Added days_since_last_order for lab 7 1.1 
+        datediff(
+            'day',
+            lag(ordered_at) over (
+                partition by customer_id
+                order by ordered_at
+            ),
+            ordered_at
+        ) as days_since_last_order
     from {{ ref('stg_ecomm__orders') }}
 ),
 
