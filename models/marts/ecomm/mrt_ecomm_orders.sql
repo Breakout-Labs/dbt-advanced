@@ -19,6 +19,16 @@ joined as (
         orders.order_id,
         orders.customer_id,
         orders.ordered_at,
+
+        datediff(
+            'day',
+            lag(orders.ordered_at) over (
+            partition by orders.customer_id
+            order by ordered_at asc
+        ),
+        ordered_at
+        ) as days_since_last_order,
+
         orders.order_status,
         orders.total_amount,
         datediff(
