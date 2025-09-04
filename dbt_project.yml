@@ -21,5 +21,9 @@ models:
     #staging:
     #  +materialized: view
     +query_tag: 'dbt_course'
-    
+
+    +persist_docs:
+      relation: true
+      columns: true
+
  
