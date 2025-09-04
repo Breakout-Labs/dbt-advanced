@@ -1,6 +1,7 @@
 {{
     config(
-        snowflake_warehouse = 'TRANSFORMING_S'
+        snowflake_warehouse = 'TRANSFORMING_S',
+        materialized = 'table'
     )
 }}
 with orders as (
@@ -25,6 +26,10 @@ stores as (
 
 joined as (
     select
+        {{ dbt_utils.generate_surrogate_key(['orders.order_id']) }} as pk_orders,
+        {{ dbt_utils.generate_surrogate_key(['customer_id']) }} as hk_customer,
+        greatest_ignore_nulls(orders._synced_at, deliveries_filtered._synced_at) as source_last_updated,
+        current_timestamp() as last_updated,
         orders.order_id,
         orders.customer_id,
         orders.ordered_at,
@@ -47,7 +52,8 @@ joined as (
 ),
 
 final as (
-    select *
+    select 
+    *
     from joined
 )
 

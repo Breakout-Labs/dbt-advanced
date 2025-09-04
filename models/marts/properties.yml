@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: customers
+  - name: fct_customers
     description: Each record represents a customer.
     columns:
       - name: customer_id
@@ -26,15 +26,68 @@ models:
         tests:
           - greater_than_zero
 
-  - name: orders
+
+  - name: fct_orders
+    versions:
+      - v: 1
+    config:
+      contract:
+        enforced: true
+    description: "This model contains order information with basic analytics and basic customer information."
     columns:
-      - name: order_id
+      - name: pk_orders
+        data_type: varchar
+        description: ""
+        constraints:
+          - type: primary_key
         tests:
           - unique
-          - not_null
-      - name: delivery_time_from_collection
-        tests:
-          - greater_than_zero
+
+      - name: hk_customer
+        data_type: varchar
+        description: ""
+
+      - name: source_last_updated
+        data_type: timestamp_ntz
+        description: ""
+
+      - name: last_updated
+        data_type: timestamp_ltz
+        description: ""
+
+      - name: order_id
+        data_type: varchar
+        description: ""
+
+      - name: customer_id
+        data_type: number
+        description: ""
+
+      - name: ordered_at
+        data_type: timestamp_ntz
+        description: ""
+
+      - name: order_status
+        data_type: varchar
+        description: ""
+
+      - name: total_amount
+        data_type: float
+        description: ""
+
       - name: delivery_time_from_order
-        tests:
-          - greater_than_zero
+        data_type: number
+        description: "Difference between orederd_at and delivered_at in minutes."
+
+      - name: delivery_time_from_collection
+        data_type: number
+        description: "Difference between picked_up_at and delivered_at in minutes."
+
+      - name: store_id
+        data_type: float
+        description: ""
+
+      - name: store_name
+        data_type: varchar
+        description: ""
+
