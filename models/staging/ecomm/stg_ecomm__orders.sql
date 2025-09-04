@@ -1,6 +1,33 @@
-with source as (
-    select *
-    from {{ source('ecomm', 'orders') }}
+{{ config(
+  snowflake_warehouse='TRANSFORMING_S'
+) }}
+
+with source as ( {{
+    dbt_utils.union_relations(
+        relations=[
+            source('ecomm', 'orders_us'),
+            source('ecomm', 'orders_de'),
+            source('ecomm', 'orders_au')
+        ],
+    )
+}} ),
+
+store_id as (
+    select
+        * exclude(store_id),
+        case
+        when
+        _dbt_source_relation ilike '%orders_us%'
+        then 1
+        when
+        _dbt_source_relation ilike '%orders_de%'
+
+        then 2
+        when
+        _dbt_source_relation ilike '%orders_au%'
+        then 3
+        end as store_id
+    from source
 ),
 
 renamed as (
@@ -9,7 +36,7 @@ renamed as (
         id as order_id,
         created_at as ordered_at,
         status as order_status
-    from source
+    from store_id
 ),
 
 order_status as (select * from {{ ref('order_status') }} ),
