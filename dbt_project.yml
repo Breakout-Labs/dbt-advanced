@@ -20,5 +20,10 @@ models:
   +query_tag: 'dbt_course'
   +on_schema_change: "sync_all_columns"
   dbt_training:
+    marts:
+      +materialized: table
     #staging:
     #  +materialized: view
+    +persist_docs:
+      relation: true
+      columns: true
