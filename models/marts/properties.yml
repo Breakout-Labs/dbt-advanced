@@ -91,3 +91,7 @@ models:
         data_type: varchar
         description: ""
 
+      - name: days_since_last_order
+        data_type: number
+        description: ""
+
