@@ -1,4 +1,4 @@
-notversion: 2
+version: 2
 
 models:
   - name: mrt_ecomm__customers
@@ -32,12 +32,12 @@ models:
   - name: mrt_ecomm__orders
     description: "orders table"
 
-    versions:
-      - v: 1
+    #versions:
+    #  - v: 1
 
-    config:
-      contract:
-        enforced: true
+    #config:
+      #contract:
+      #  enforced: true
 
     columns:
       - name: order_id

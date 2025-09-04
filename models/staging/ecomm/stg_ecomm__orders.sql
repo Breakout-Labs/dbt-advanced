@@ -32,8 +32,8 @@ redefined_store_id as (
 deduplicated_cte as (
   {{ dbt_utils.deduplicate(
       relation='redefined_store_id',
-      partition_by='customer_id',
-      order_by='customer_id desc',
+      partition_by='order_id',
+      order_by='_synced_at desc',
      )
   }}
 ),
