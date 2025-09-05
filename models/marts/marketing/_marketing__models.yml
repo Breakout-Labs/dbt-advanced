@@ -9,6 +9,9 @@ models:
         tests:
           - unique
           - not_null
+          - dbt_utils.cardinality_equality:
+              field: customer_id
+              to: ref('stg_ecomm__customers')
       - name: first_name
         description: A customer's first name.
       - name: last_name
