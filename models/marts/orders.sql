@@ -16,6 +16,11 @@ deliveries_filtered as (
     where delivery_status = 'delivered'
 ),
 
+store_names as (
+    select *
+    from {{ ref('stores') }}
+),
+
 joined as (
     select
         orders.order_id,
