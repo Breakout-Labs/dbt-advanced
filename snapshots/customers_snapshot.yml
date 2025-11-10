@@ -1,0 +1,9 @@
+snapshots:
+  - name: customers_snapshot
+    relation: source('ecomm', 'customers')
+    config:
+      schema: snapshots
+      database: breakout_labs
+      unique_key: id
+      strategy: check
+      check_cols: 'all'

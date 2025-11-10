@@ -1,0 +1,9 @@
+snapshots:
+  - name: orders_us_snapshot
+    relation: source('ecomm', 'orders') # the name of the table not the identifier
+    config:
+      schema: snapshots
+      database: breakout_labs
+      unique_key: id
+      strategy: timestamp
+      updated_at: _synced_at
