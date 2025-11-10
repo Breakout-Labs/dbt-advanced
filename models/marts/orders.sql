@@ -21,6 +21,7 @@ joined as (
         orders.ordered_at,
         orders.order_status,
         orders.total_amount,
+        orders.store_id, 
         datediff(
             'minutes', orders.ordered_at, deliveries_filtered.delivered_at
         ) as delivery_time_from_order,
@@ -34,9 +35,18 @@ joined as (
         on orders.order_id = deliveries_filtered.order_id
 ),
 
+j2 as (
+    select 
+        joined.*,
+        stores.store_name
+    from joined 
+    left join {{ ref('stores') }} stores on stores.store_id = joined.store_id
+
+ ),
+
 final as (
     select *
-    from joined
+    from j2
 )
 
 select *
