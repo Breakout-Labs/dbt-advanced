@@ -1,0 +1,8 @@
+snapshots:
+  - name: customers_snapshot
+    relation: source('ecomm', 'customers')
+    config:
+      unique_key: id
+      strategy: timestamp
+      updated_at: created_at
+      schema: snapshots
