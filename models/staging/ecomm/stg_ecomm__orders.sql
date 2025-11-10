@@ -12,10 +12,15 @@ renamed as (
     from source
 ),
 
+order_statuses as (
+    select *
+    from {{ ref('order_status') }}
+),
+
 normalize_order_status as (
     select
-        *,
-        -- quick & dirty, will fix later - Mike
+        renamed.*,
+        /*-- quick & dirty, will fix later - Mike
         case 
             when order_status ilike any(
                 'ordered', 'order_created') then 'Ordered'
@@ -28,7 +33,10 @@ normalize_order_status as (
             else
                 'Unknown'
         end as order_status_normalized
+        */
+        order_statuses.order_status_normalized
     from renamed
+    left join order_statuses on lower(renamed.order_status) = order_statuses.order_status
 ),
 
 final as (
