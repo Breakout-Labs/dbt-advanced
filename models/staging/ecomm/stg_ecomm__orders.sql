@@ -4,7 +4,7 @@ with sources as (
             relations=[
                 source('ecomm', 'orders_us'),
                 source('ecomm', 'orders_de'),
-                source('ecomm', 'orders_au')
+                ref('_orders_au_deduped')
             ],
         )
     }}
@@ -21,7 +21,7 @@ add_store_id as (
         case
             when _dbt_source_relation ilike '%orders_us' then 1
             when _dbt_source_relation ilike '%orders_de' then 2
-            when _dbt_source_relation ilike '%orders_au' then 3
+            when _dbt_source_relation ilike '%_orders_au_deduped' then 3
         end as store_id            -- Add calculated store_id
     from sources
 ),
