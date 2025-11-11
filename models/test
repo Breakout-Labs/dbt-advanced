@@ -1,0 +1,3 @@
+update raw.ecomm.orders_us
+set first_name = 'BOB'
+where customer_id = 16;
