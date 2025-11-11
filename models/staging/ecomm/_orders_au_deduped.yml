@@ -1,0 +1,7 @@
+models:
+  - name: _orders_au_deduped
+    columns:
+      - name: id
+        data_tests:
+          - unique
+          - not_null
