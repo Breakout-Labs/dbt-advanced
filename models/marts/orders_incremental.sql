@@ -9,7 +9,7 @@ with orders as (
     from {{ ref('stg_ecomm__orders') }}
 
     {% if is_incremental() %}
-        where ordered_at > (select dateadd('day',-3,max(ordered_at)) from {{ this }})
+        where ordered_at >= (select dateadd('day',-3,max(ordered_at)) from {{ this }})
     {% endif %}
 ),
 
