@@ -35,7 +35,15 @@ joined as (
             'minutes',
             deliveries_filtered.picked_up_at,
             deliveries_filtered.delivered_at
-        ) as delivery_time_from_collection
+        ) as delivery_time_from_collection,
+          datediff(
+            'day',
+            lag(orders.ordered_at) over (
+            partition by customer_id
+            order by orders.ordered_at
+            ),
+            orders.ordered_at
+        ) as days_since_last_order
     from orders
     left join deliveries_filtered
         on orders.order_id = deliveries_filtered.order_id
