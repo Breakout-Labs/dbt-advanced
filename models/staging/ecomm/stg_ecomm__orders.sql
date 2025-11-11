@@ -41,5 +41,14 @@ final as (
     from normalize_order_status
 )
 
+/*
+select 
+    order_id,
+    max(datediff('day', created_at, _synced_at)) as datediff
+from final 
+group by 1
+order by 2 desc
+*/ 
+
 select *
 from final
