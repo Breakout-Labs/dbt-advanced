@@ -1,8 +1,13 @@
-{{ config(materialized='table') }}
+{{ config(materialized='incremental') }}
 
 with orders as (
     select *
     from {{ ref('stg_ecomm__orders') }}
+
+{% if is_incremental() %}
+    -- this filter will only be applied on an incremental run
+    where ordered_at >= (select max(ordered_at) from {{ this }})
+{% endif %}
 ),
 
 deliveries as (
@@ -33,11 +38,10 @@ joined as (
             'minutes', orders.ordered_at, deliveries_filtered.delivered_at
         ) as delivery_time_from_order,
         datediff(
-            'day',lag(ordered_at) over (
-            partition by customer_id
-            order by ordered_at),ordered_at
-        ) as days_since_last_order
-        
+            'minutes',
+            deliveries_filtered.picked_up_at,
+            deliveries_filtered.delivered_at
+        ) as delivery_time_from_collection
     from orders
     left join deliveries_filtered
         on (orders.order_id = deliveries_filtered.order_id)
@@ -51,4 +55,3 @@ final as (
 
 select *
 from final
- 
