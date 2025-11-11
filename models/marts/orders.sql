@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 -- models/orders.sql
+=======
+{{ config(materialized='table') }}
+
+>>>>>>> 2bf8bf0e5cf59d654848b73e3349924c43b53f68
 with orders as (
     select *
     from {{ ref('stg_ecomm__orders') }}
