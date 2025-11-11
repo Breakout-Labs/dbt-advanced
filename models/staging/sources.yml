@@ -4,6 +4,7 @@ sources:
   - name: ecomm
     database: raw
     tables:
+      - name: orders_au
       - name: customers
         description: Each record in this table represents a customer in our ecommerce application.
         columns:
