@@ -1,7 +1,12 @@
 {{ config(materialized='table') }}
 
 with orders as (
-    select *
+    select 
+    *,
+    datediff('day', lag(ordered_at) over (
+        partition by customer_id
+        order by ordered_at asc), ordered_at)   
+    as days_since_last_order
     from {{ ref('stg_ecomm__orders') }}
 ),
 
@@ -24,6 +29,7 @@ joined as (
         orders.order_status,
         orders.total_amount,
         orders.store_id, 
+        orders.days_since_last_order,
         datediff(
             'minutes', orders.ordered_at, deliveries_filtered.delivered_at
         ) as delivery_time_from_order,
