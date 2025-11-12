@@ -1,8 +1,16 @@
-{{ config(materialized='table') }}
-
+{{
+  config(
+    materialized='incremental'
+   
+  )
+}}
+ 
 with orders as (
-    select *
-    from {{ ref('stg_ecomm__orders') }}
+  select *
+  from {{ ref('stg_ecomm__orders') }}
+  {% if is_incremental() -%}
+    where ordered_at > (select max(ordered_at) from {{ this }})
+  {% endif %}
 ),
 
 deliveries as (
