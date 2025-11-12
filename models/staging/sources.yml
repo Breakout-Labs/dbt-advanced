@@ -4,12 +4,17 @@ sources:
   - name: ecomm
     database: raw
     tables:
+      - name: orders_us  # This used to be orders with identifier pointing to orders_us. Now it's just plain orders_us.
+        description: Each record in this table represents an order in our ecommerce store in the US
+      - name: orders_de
+        description: Each record in this table represents an order in our ecommerce store in Germany
+      - name: orders_au
+        description: Each record in this table represents an order in our ecommerce store in Australia
       - name: customers
         description: Each record in this table represents a customer in our ecommerce application.
         columns:
           - name: id
             description: '{{ doc("customer_id") }}'
-      - name: orders_au # This is the new AU orders table
       - name: orders
         identifier: orders_us
         description: Each record in this table represents an order in our ecommerce application.
