@@ -15,8 +15,9 @@ target-path: "target"
 clean-targets:
   - "target"
   - "dbt_packages"
-
+  
 models:
-  dbt_training:
+  +query_tag: 'dbt_course'
+
     #staging:
     #  +materialized: view

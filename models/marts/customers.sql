@@ -19,8 +19,6 @@ customer_metrics as (
         count(*) as count_orders,
         min(ordered_at) as first_order_at,
         max(ordered_at) as most_recent_order_at,
-        avg(delivery_time_from_collection)
-            as average_delivery_time_from_collection,
         avg(delivery_time_from_order) as average_delivery_time_from_order,
     {% for days in [30,90,360] %}
         count(case when ordered_at > current_date - {{ days }} then 1 end)
@@ -41,7 +39,6 @@ joined as (
         coalesce(customer_metrics.count_orders, 0) as count_orders,
         customer_metrics.first_order_at,
         customer_metrics.most_recent_order_at,
-        customer_metrics.average_delivery_time_from_collection,
         customer_metrics.average_delivery_time_from_order,
     {% for days in [30,90,360] %}
         customer_metrics.count_orders_last_{{ days }}_days
