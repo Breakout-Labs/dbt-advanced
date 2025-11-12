@@ -2,7 +2,7 @@
 
 with orders as (
     select *
-    from {{ ref('stg_ecomm__orders') }}
+    from {{ ref('stg_ecomm__orders_us') }}
 ),
 
 deliveries as (
