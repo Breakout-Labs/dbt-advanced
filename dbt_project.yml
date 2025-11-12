@@ -17,6 +17,10 @@ clean-targets:
   - "dbt_packages"
 
 models:
+  +query_tag: 'dbt_course'
   dbt_training:
+    marts:
+      orders:
+        +snowflake_warehouse: 'TRANSFORMING_S'
     #staging:
     #  +materialized: view
