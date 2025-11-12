@@ -1,7 +1,9 @@
-select    
+{{ config(materialized='view') }}
+
+select
     *
-from orders_au
+from {{ source('ecomm', 'orders_au') }}
 qualify row_number() over (
-    partition by customer_id
-    order by created_at  desc
+    partition by id
+    order by _synced_at desc
 ) = 1
