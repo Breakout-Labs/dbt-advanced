@@ -25,3 +25,6 @@ models:
   ## for details, see docs: <https://docs.elementary-data.com/>
   elementary:
     +schema: "elementary"
+  +persist_docs:
+    relation: true
+    columns: true
