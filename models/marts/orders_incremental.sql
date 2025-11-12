@@ -6,7 +6,7 @@
 
 with orders as (
     select *
-    from {{ ref('stg_ecomm__orders_us') }}
+    from {{ ref('stg_ecomm__orders') }}
 
     {% if is_incremental() %}
         where ordered_at >= (select dateadd('day',-3,max(ordered_at)) from {{ this }})
@@ -22,7 +22,7 @@ order_datediff as (
     select 
     datediff('days',created_at,_synced_at) as date_delta,
     count(*)
-    from {{ ref('stg_ecomm__orders_us') }}
+    from {{ ref('stg_ecomm__orders') }}
     group by 1
 ),
 
