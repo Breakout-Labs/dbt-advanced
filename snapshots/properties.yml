@@ -7,7 +7,7 @@ snapshots:
       check_cols: all
       schema: snapshots
   - name: orders_snapshot 
-    relation: source('ecomm', 'orders')
+    relation: source('ecomm', 'orders_us')
     config: 
       unique_key: id 
       strategy: timestamp 

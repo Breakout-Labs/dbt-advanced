@@ -1,30 +1,41 @@
 with source as (
-    select *
-    from {{ source('ecomm', 'orders') }}
+    select * from {{ source('ecomm', 'orders_us') }} us
+    union by name 
+    select *, '2' as store_id from {{ source('ecomm', 'orders_de')}} de 
+    union by name 
+    select *, '3' as store_id from {{ ref('_orders_au_deduped')}} au 
+
 ),
+
+
+
+{#
+
+{{
+    dbt_utils.union_relations(
+        relations=[
+            source('ecomm', 'orders_us'),
+            source('ecomm', 'orders_de'),
+            ref('_orders_au_deduped')
+        ],
+    )
+}}
+#}
+
+
 
 renamed as (
     select
         *,
+
         id as order_id,
         created_at as ordered_at,
         status as order_status
     from source
 ),
 
-    /* -- quick & dirty, will fix later - Mike
-        case 
-            when order_status ilike any(
-                'ordered', 'order_created') then 'Ordered'
-            when lower(order_status) in ('shipped', 'sent')
-                then 'Shipped'
-            when lower(order_status) = 'pending' or lower(order_status) in ('waiting', 'processing', 'payment_pending') then 'Pending'
-            when order_status = 'canceled' or 
-            order_status = 'cancelled' then 'Canceled'
-            when order_status = 'delivered' then 'Delivered'
-            else
-                'Unknown'
-        end as order_status_normalized */
+
+
 
 normalize_order_status as (
     select
