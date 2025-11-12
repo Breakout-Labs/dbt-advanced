@@ -1,6 +1,12 @@
-{{
+{# {{
     config(
         materialized='ephemeral'
+    )
+}} #}
+
+{{
+    config(
+        materialized='view'
     )
 }}
 

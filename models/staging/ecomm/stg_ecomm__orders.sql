@@ -1,15 +1,38 @@
-with source as (
-    select *
-    from {{ source('ecomm', 'orders') }}
+
+
+with sources as (
+    {{
+        dbt_utils.union_relations(
+            relations=[
+                source('ecomm', 'orders_us'),
+                source('ecomm', 'orders_de'),
+                ref('_orders_au_deduped')
+            ],
+        )
+    }}
+),
+
+store_id_map as (
+    select _dbt_source_relation as source_name,
+        case _dbt_source_relation
+            when 'raw.ecomm.orders_us' then 1
+            when 'raw.ecomm.orders_de' then 2
+            when 'BREAKOUT_LABS.dbt_kjoshi._orders_au_deduped' then 3
+        end as store_id
+    from sources
 ),
 
 renamed as (
     select
-        *,
+        sources.*
+            exclude(store_id),
         id as order_id,
         created_at as ordered_at,
-        status as order_status
-    from source
+        status as order_status,
+        store_id_map.store_id as store_id
+    from sources
+    left join store_id_map
+    on sources._dbt_source_relation = store_id_map.source_name
 ),
 
 order_status_seed as (

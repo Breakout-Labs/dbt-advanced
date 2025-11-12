@@ -1,6 +1,6 @@
 snapshots:
   - name: orders_us_snapshot
-    relation: source('ecomm', 'orders') # the name of the table not the identifier
+    relation: source('ecomm', 'orders_us') # the name of the table not the identifier
     config:
       schema: snapshots
       database: breakout_labs
