@@ -1,4 +1,4 @@
-{{ source('ecomm', 'orders_au') }}
+{{ config(materialized='ephemeral') }}
 
 select * 
 from {{source("ecomm","orders_au")}}
