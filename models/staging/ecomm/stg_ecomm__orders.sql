@@ -1,7 +1,14 @@
 -- models/staging/stg_ecomm__orders.sql
-with source as (
-    select *
-    from {{ source('ecomm', 'orders') }}
+with sources as (
+    {{ 
+        dbt_utils.union_relations(
+            relations=[
+                source('ecomm', 'orders_us'),
+                source('ecomm', 'orders_de'),
+                ref('_orders_au_deduped')
+            ],
+        )
+    }}
 ),
 
 
@@ -15,7 +22,7 @@ renamed as (
         *,
         id as order_id,
         created_at as ordered_at
-    from source
+    from sources
 ),
 
 normalize_order_status as (
@@ -28,9 +35,19 @@ normalize_order_status as (
     )
 ),
 
+store_id as (
+    select * exclude (store_id),
+    case
+        when _dbt_source_relation ilike '%orders_us' then 1
+        when _dbt_source_relation ilike '%orders_de' then 2
+        when _dbt_source_relation ilike '%_orders_au_deduped' then 3
+    end as store_id
+    from normalize_order_status
+),
+
 final as (
     select *
-    from normalize_order_status
+    from store_id
 )
 
 select *

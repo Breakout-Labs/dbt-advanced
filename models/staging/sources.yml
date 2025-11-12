@@ -10,9 +10,12 @@ sources:
           - name: id
             description: '{{ doc("customer_id") }}'
       - name: orders_au
-      - name: orders
+        description: Each record in this table represents an order in our ecommerce application for Australia.
+      - name: orders_de
+        description: Each record in this table represents an order in our ecommerce application for Germany.
+      - name: orders_us
         identifier: orders_us
-        description: Each record in this table represents an order in our ecommerce application.
+        description: Each record in this table represents an order in our ecommerce application for US.
         columns:
           - name: id
             tests:
