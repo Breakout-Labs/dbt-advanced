@@ -30,6 +30,7 @@ joined as (
         orders.order_status,
         orders.total_amount,
         store_names.store_name,
+        
         datediff(
             'minutes', orders.ordered_at, deliveries_filtered.delivered_at
         ) as delivery_time_from_order,
@@ -37,7 +38,12 @@ joined as (
             'minutes',
             deliveries_filtered.picked_up_at,
             deliveries_filtered.delivered_at
-        ) as delivery_time_from_collection
+        ) as delivery_time_from_collection,
+
+        lag(orders.ordered_at) over (
+            partition by orders.customer_id
+            order by orders.ordered_at
+        ) as prev_ordered_at
     from orders
     left join
         deliveries_filtered
@@ -46,7 +52,9 @@ joined as (
 ),
 
 final as (
-    select *
+    select
+      *,
+      datediff('day', prev_ordered_at, ordered_at) as days_since_last_order
     from joined
 )
 

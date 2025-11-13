@@ -1,0 +1,12 @@
+version: 2
+
+
+sources:
+  - name: ecomm
+    database: RAW
+    schema: ECOMM
+    tables:   
+      - name: orders_au
+        description: "Raw AU orders table"
+
+  
