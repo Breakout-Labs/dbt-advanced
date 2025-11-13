@@ -16,10 +16,31 @@ clean-targets:
   - "target"
   - "dbt_packages"
 
+# --------------------------------------------------------------------
+# CONFIGURACIÓN DE MODELOS
+# --------------------------------------------------------------------
 models:
-  
-
   dbt_training:
-    +query_tag: 'dbt_course' 
-    #staging:
-    #  +materialized: view
+    +query_tag: 'dbt_course'
+
+    # Materialización por defecto (puede cambiarse por modelo individual)
+    +materialized: table
+
+    # Ejemplo: subcarpetas opcionales
+    # staging:
+    #   +materialized: view
+
+    # Añadimos metadatos por defecto (útil para Snowflake y auditoría)
+    +persist_docs:
+      relation: true
+      columns: true
+
+    # Etiqueta de warehouse para modelos transform
+    +snowflake_warehouse: 'TRANSFORMING_S'
+
+# --------------------------------------------------------------------
+# DEPENDENCIAS DE PAQUETES (dbt_utils)
+# --------------------------------------------------------------------
+# Este bloque indica que este proyecto depende de dbt_utils
+# (el paquete que usamos para generar surrogate keys)
+packages-install-path: "dbt_packages"
