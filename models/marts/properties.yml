@@ -31,12 +31,33 @@ models:
       - name: most_recent_order_at
         description: The timestamp of a customer's most recent order.
       - name: average_delivery_time_from_collection
+        description: The average time in minutes from order collection to delivery.
         data_tests:
           - greater_than_zero
       - name: average_delivery_time_from_order
+        description: The average time in minutes from order placement to delivery.
         data_tests:
           - greater_than_zero
+      - name: email
+        description: The email address of the customer.
+      - name: address
+        description: The physical address of the customer.
+      - name: phone_number
+        description: The contact phone number of the customer.
+      - name: created_at
+        description: The timestamp when the customer record was created.
+      - name: satisfaction_score
+        description: The score representing the customer's satisfaction level from survey responses.
+      - name: survey_date
+        description: The date when the customer survey was conducted.
+      - name: count_orders_last_30_days
+        description: The number of orders placed by the customer in the last 30 days.
+      - name: count_orders_last_90_days
+        description: The number of orders placed by the customer in the last 90 days.
+      - name: count_orders_last_360_days
+        description: The number of orders placed by the customer in the last 360 days.
 
+        
   - name: orders
     versions:
       - v: 1
