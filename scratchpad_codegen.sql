@@ -1,0 +1,2 @@
+{{ codegen.generate_model_yaml(['orders']) }}
+
