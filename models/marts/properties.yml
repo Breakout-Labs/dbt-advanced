@@ -27,14 +27,68 @@ models:
           - greater_than_zero
 
   - name: orders
+    versions:
+      - v: 1
+    config:
+      contract:
+        enforced: true
+    description: "Contains detailed information about customer orders, including identifiers, timestamps, status, and delivery metrics."
     columns:
       - name: order_id
         tests:
           - unique
           - not_null
-      - name: delivery_time_from_collection
-        tests:
-          - greater_than_zero
+        data_type: varchar
+        description: "Unique identifier for each order."
+
+      - name: customer_id
+        data_type: number
+        description: "Unique identifier for the customer who placed the order."
+
+      - name: ordered_at
+        data_type: timestamp_ntz
+        description: "Timestamp when the order was placed."
+
+      - name: order_status
+        data_type: varchar
+        description: "Current status of the order (e.g., pending, shipped, delivered)."
+
+      - name: days_since_last_order
+        data_type: number
+        description: "Number of days since the customer's previous order."
+
+      - name: total_amount
+        data_type: float
+        description: "Total monetary value of the order."
+
+      - name: store_name
+        data_type: varchar
+        description: "Name of the store or location where the order was placed."
+
       - name: delivery_time_from_order
+        data_type: number
+        description: "Time taken (in hours or days) from order placement to delivery."
+
+      - name: delivery_time_from_collection
+        data_type: number
+        description: "Time taken (in hours or days) from collection to delivery."
+
+      - name: source_last_updated
+        data_type: timestamp_ntz
+        description: "Timestamp when the source system last updated this record."
+
+      - name: last_updated
+        data_type: timestamp_ltz
+        description: "Timestamp when this record was last updated in the warehouse."
+
+      - name: pk_orders
+        data_type: varchar
+        constraints:
+          - type: primary_key
         tests:
-          - greater_than_zero
+          - unique
+
+      - name: hk_customer
+        data_type: varchar
+        description: "Hash key representing the customer for data modeling purposes."
+  
