@@ -25,8 +25,6 @@ models:
       - name: average_delivery_time_from_order
         tests:
           - greater_than_zero
-
-models:
   - name: orders
     versions:
       - v: 1
