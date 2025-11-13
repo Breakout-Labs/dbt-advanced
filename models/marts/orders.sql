@@ -1,5 +1,6 @@
 {{ config(materialized='table') }}
 
+
 with orders as (
     select *
     from {{ ref('stg_ecomm__orders') }}
@@ -20,10 +21,13 @@ joined as (
     select
         orders.order_id,
         orders.customer_id,
+        orders.store_id,
         orders.ordered_at,
         orders.order_status,
         orders.total_amount,
         stores.store_name,
+        orders._synced_at as orders_synced_at,
+        deliveries_filtered._synced_at as deliveries_synced_at,
         datediff(
             'minutes', orders.ordered_at, deliveries_filtered.delivered_at
         ) as delivery_time_from_order,
@@ -45,7 +49,11 @@ joined as (
 ),
 
 final as (
-    select *
+    select *,
+        {{ dbt_utils.generate_surrogate_key(['order_id']) }} as pk_orders,
+        {{ dbt_utils.generate_surrogate_key(['customer_id']) }} as hk_customer,
+        current_timestamp() as last_updated,
+        greatest_ignore_nulls(joined.orders_synced_at, joined.deliveries_synced_at) as source_last_updated
     from joined
 )
 
