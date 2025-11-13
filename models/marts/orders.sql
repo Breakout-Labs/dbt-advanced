@@ -17,6 +17,7 @@ with
             orders.ordered_at,
             orders.order_status,
             orders.total_amount,
+            orders._synced_at as orders_synced_at,
             store_names.store_name,
             datediff(
                 'minutes', orders.ordered_at, deliveries_filtered.delivered_at
@@ -30,7 +31,8 @@ with
                 'day',
                 lag(ordered_at) over (partition by customer_id order by ordered_at),
                 ordered_at
-            ) as days_since_last_order
+            ) as days_since_last_order,
+            deliveries_filtered._synced_at as deliveries_filtered_synced_at
         from orders
         left join
             deliveries_filtered on (orders.order_id = deliveries_filtered.order_id)
@@ -39,5 +41,11 @@ with
 
     final as (select * from joined)
 
-select *
+select 
+{{ dbt_utils.generate_surrogate_key(['order_id']) }} as pk_orders,
+{{ dbt_utils.generate_surrogate_key(['customer_id']) }} as hk_customer,
+greatest_ignore_nulls(orders_synced_at, deliveries_filtered_synced_at) as source_last_updated,
+current_timestamp() as last_updated,
+*
 from final
+
