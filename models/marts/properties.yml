@@ -1,12 +1,23 @@
 version: 2
 
 models:
+
+  - name: stg_ecomm__orders
+    columns:
+      - name: order_id
+        tests:
+          - unique
+          - not_null
+      - name: store_id
+        tests:
+          - not_null
+          
   - name: customers
     description: Each record represents a customer.
     columns:
       - name: customer_id
         description: '{{ doc("customer_id") }}'
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: first_name
@@ -20,32 +31,81 @@ models:
       - name: most_recent_order_at
         description: The timestamp of a customer's most recent order.
       - name: average_delivery_time_from_collection
-        tests:
+        data_tests:
           - greater_than_zero
       - name: average_delivery_time_from_order
-        tests:
+        data_tests:
           - greater_than_zero
 
   - name: orders
+    versions:
+      - v: 1
+    config:
+      contract:
+        enforced: true
+    description: ""
     columns:
-      - name: order_id
+      - name: pk_orders
+        description: Primary key for the orders model.
+        data_type: varchar
+        constraints:
+          - type: primary_key
         tests:
           - unique
-          - not_null
-      - name: delivery_time_from_collection
-        tests:
-          - greater_than_zero
-      - name: delivery_time_from_order
-        tests:
-          - greater_than_zero
+        
 
-          
-  - name: stg_ecomm__orders
-    columns:
+      - name: hk_customer
+        description: Hash key for identifying the customer associated with the order.
+        data_type: varchar
+        
+
       - name: order_id
-        tests:
-          - unique
-          - not_null
-      - name: store_id
-        tests:
-          - not_null
+        description: Unique identifier for each order.
+        data_type: varchar
+        
+
+      - name: customer_id
+        description: Identifier for the customer who placed the order.
+        data_type: number
+        
+
+      - name: ordered_at
+        description: Timestamp indicating when the order was placed.
+        data_type: timestamp_ntz
+        
+
+      - name: total_amount
+        description: Total monetary value of the order.
+        data_type: float
+        
+
+      - name: source_last_updated
+        description: Timestamp of the most recent update from the source systems.
+        data_type: timestamp_ntz
+        
+
+      - name: store_name
+        description: Name of the store where the order was placed.
+        data_type: varchar
+        
+
+      - name: days_since_last_order
+        description: Number of days since the customer's last order.
+        data_type: number
+        
+
+      - name: delivery_time_from_order
+        description: Time in minutes from when the order was placed to when it was delivered.
+        data_type: number
+        
+
+      - name: delivery_time_from_collection
+        description: Time in minutes from when the order was picked up to when it was delivered.
+        data_type: number
+        
+
+      - name: last_updated
+        description: Timestamp of the last update to the record.
+        data_type: timestamp_ltz
+        
+

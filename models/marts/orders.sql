@@ -4,6 +4,8 @@
 ) 
 }}
 
+
+
 -- models/orders.sql
 with orders as (
     select *
@@ -31,8 +33,8 @@ joined as (
         orders.order_id,
         orders.customer_id,
         orders.ordered_at,
-        orders.order_status,
         orders.total_amount,
+        greatest_ignore_nulls(orders._synced_at, deliveries_filtered._synced_at) as source_last_updated,
         store_names.store_name,
           datediff(
             'day',
@@ -58,7 +60,10 @@ joined as (
 ),
 
 final as (
-    select *
+    select {{ dbt_utils.generate_surrogate_key(['order_id']) }} as pk_orders,
+    {{ dbt_utils.generate_surrogate_key(['customer_id']) }} as hk_customer,
+    *,
+    current_timestamp() as last_updated,
     from joined
 )
 

@@ -17,12 +17,12 @@ order_status as (
 
 add_store_id as (
     select
-        * exclude (store_id),    -- Omit original store_id column
+        * exclude (store_id),    
         case
             when _dbt_source_relation ilike '%orders_us' then 1
             when _dbt_source_relation ilike '%orders_de' then 2
             when _dbt_source_relation ilike '%_orders_au_deduped' then 3
-        end as store_id            -- Add calculated store_id
+        end as store_id            
     from sources
 ),
 
