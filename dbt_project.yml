@@ -22,5 +22,9 @@ models:
     marts:
       orders:
         +snowflake_warehouse: "TRANSFORMING_S"
+    ## elementary models will be created in the schema '<your_schema>_elementary'
+    ## for details, see docs: <https://docs.elementary-data.com/>
+    elementary:
+    +schema: "elementary"
     #staging:
     #  +materialized: view

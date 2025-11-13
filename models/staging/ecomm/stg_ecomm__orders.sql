@@ -14,6 +14,7 @@ with sources as (
 
 store_id_map as (
     select _dbt_source_relation as source_name,
+        id,
         case _dbt_source_relation
             when 'raw.ecomm.orders_us' then 1
             when 'raw.ecomm.orders_de' then 2
@@ -26,13 +27,14 @@ renamed as (
     select
         sources.*
             exclude(store_id),
-        id as order_id,
+        sources.id as order_id,
         created_at as ordered_at,
         status as order_status,
         store_id_map.store_id as store_id
     from sources
     left join store_id_map
     on sources._dbt_source_relation = store_id_map.source_name
+    and sources.id = store_id_map.id
 ),
 
 order_status_seed as (
