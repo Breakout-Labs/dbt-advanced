@@ -90,3 +90,6 @@ models:
       - name: last_updated
         data_type: timestamp_ltz
         description: ""
+
+      - name: days_since_last_order
+        data_type: number
