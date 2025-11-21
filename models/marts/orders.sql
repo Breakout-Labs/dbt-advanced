@@ -29,6 +29,8 @@ store_names as (
 
 joined as (
     select
+        {{ dbt_utils.generate_surrogate_key(['orders.order_id']) }} as pk_orders,
+        {{ dbt_utils.generate_surrogate_key(['orders.customer_id']) }} as hk_customer,
         orders.order_id,
         orders.customer_id,
         orders.ordered_at,
@@ -42,7 +44,9 @@ joined as (
             'minutes',
             deliveries_filtered.picked_up_at,
             deliveries_filtered.delivered_at
-        ) as delivery_time_from_collection
+        ) as delivery_time_from_collection,
+        greatest_ignore_nulls(orders._synced_at, deliveries_filtered._synced_at) as source_last_updated,
+        current_timestamp() as last_updated
     from orders
     left join
         deliveries_filtered
