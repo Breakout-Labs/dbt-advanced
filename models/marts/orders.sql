@@ -1,4 +1,11 @@
 -- models/orders.sql
+
+{{
+    config(
+        snowflake_warehouse='TRANSFORMING_S'
+    )
+}}
+
 with orders as (
     select *
     from {{ ref('stg_ecomm__orders') }}
