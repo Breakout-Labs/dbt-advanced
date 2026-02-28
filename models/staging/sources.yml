@@ -1,6 +1,13 @@
 version: 2
 
 sources:
+
+  - name: snapshot_demo
+    database: demo
+    schema: snapshots
+    tables:
+      - name: orders
+
   - name: ecomm
     database: raw
     tables:
