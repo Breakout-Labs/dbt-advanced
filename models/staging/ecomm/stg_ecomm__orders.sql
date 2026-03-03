@@ -12,23 +12,21 @@ renamed as (
     from source
 ),
 
+orders_mapping as (
+    select *
+    from {{ ref('orders_mapping') }}
+),
+
 normalize_order_status as (
     select
-        *,
-        -- quick & dirty, will fix later - Mike
-        case 
-            when order_status ilike any(
-                'ordered', 'order_created') then 'Ordered'
-            when lower(order_status) in ('shipped', 'sent')
-                then 'Shipped'
-            when lower(order_status) = 'pending' or lower(order_status) in ('waiting', 'processing', 'payment_pending') then 'Pending'
-            when order_status = 'canceled' or 
-            order_status = 'cancelled' then 'Canceled'
-            when order_status = 'delivered' then 'Delivered'
-            else
-                'Unknown'
-        end as order_status_normalized
-    from renamed
+        r.*,
+        coalesce(
+            osm.normalized_status,
+            'Unknown'
+        ) as order_status_normalized
+    from renamed r
+    left join orders_mapping osm
+        on lower(r.order_status) = lower(osm.raw_status)
 ),
 
 final as (
