@@ -15,11 +15,17 @@ deliveries_filtered as (
     from deliveries
     where delivery_status = 'delivered'
 ),
+store_table as (
+    select *
+    from dbt_pbruunhaugen.stores
+),
 
 joined as (
     select
         orders.order_id,
         orders.customer_id,
+        orders.store_id,
+        st.store_name,
         orders.ordered_at,
         orders.order_status,
         orders.total_amount,
@@ -34,6 +40,7 @@ joined as (
     from orders
     left join deliveries_filtered
         on orders.order_id = deliveries_filtered.order_id
+    left join store_table as st using (store_id)
 ),
 
 final as (
