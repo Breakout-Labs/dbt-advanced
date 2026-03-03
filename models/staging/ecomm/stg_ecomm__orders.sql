@@ -32,8 +32,9 @@ normalize_order_status as (
 ),
 
 final as (
-    select *
+    select normalize_order_status.*, stores.STORE_NAME
     from normalize_order_status
+    LEFT JOIN {{ ref('stores') }} as stores ON normalize_order_status.STORE_ID = stores.store_id
 )
 
 select *
