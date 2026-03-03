@@ -36,5 +36,5 @@ final as (
     from normalize_order_status
 )
 
-select *
+select *, current_timestamp() as last_updated
 from final

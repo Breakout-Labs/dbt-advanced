@@ -1,0 +1,12 @@
+order_status,show_name
+ordered,Ordered
+order_created,Ordered
+shipped,Shipped
+sent,Shipped
+canceled,Canceled
+cancelled,Canceled
+delivered,Delivered
+pending,Pending
+waiting,Pending
+processing,Pending
+payment_pending,Pending
