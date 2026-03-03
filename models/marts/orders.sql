@@ -21,7 +21,8 @@ joined as (
         orders.order_id,
         orders.customer_id,
         orders.ordered_at,
-        orders.order_status,
+        orders.store_name,
+        orders.order_status_normalized,
         orders.total_amount,
         datediff(
             'minutes', orders.ordered_at, deliveries_filtered.delivered_at

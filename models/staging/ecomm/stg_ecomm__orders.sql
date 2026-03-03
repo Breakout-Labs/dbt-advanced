@@ -3,32 +3,32 @@ with source as (
     from {{ source('ecomm', 'orders') }}
 ),
 
+stores as (
+    select * from {{ ref("stores")}}
+),
+
+order_status as (
+    select * from {{ ref("order_status")}}
+),
+
 renamed as (
     select
-        *,
+        source.*,
         id as order_id,
         created_at as ordered_at,
-        status as order_status
+        status as order_status,
+        stores.store_name
     from source
+    left join stores on source.store_id = stores.store_id
 ),
 
 normalize_order_status as (
     select
-        *,
+        renamed.*,
         -- quick & dirty, will fix later - Mike
-        case 
-            when order_status ilike any(
-                'ordered', 'order_created') then 'Ordered'
-            when lower(order_status) in ('shipped', 'sent')
-                then 'Shipped'
-            when lower(order_status) = 'pending' or lower(order_status) in ('waiting', 'processing', 'payment_pending') then 'Pending'
-            when order_status = 'canceled' or 
-            order_status = 'cancelled' then 'Canceled'
-            when order_status = 'delivered' then 'Delivered'
-            else
-                'Unknown'
-        end as order_status_normalized
+        order_status.order_status_normalized
     from renamed
+    left join order_status on lower(renamed.order_status) = lower(order_status.order_status)
 ),
 
 final as (

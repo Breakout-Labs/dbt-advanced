@@ -1,0 +1,8 @@
+snapshots:
+  - name: custom_snap
+    relation: source('ecomm', 'customers')
+    config:
+      schema: snapshots
+      strategy: check
+      unique_key: id
+      check_cols: all
