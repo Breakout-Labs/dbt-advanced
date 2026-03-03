@@ -1,0 +1,8 @@
+snapshots:
+  - name: customers_snapshot # tablename in the database
+    relation: source('ecomm', 'customers')
+    config:
+      unique_key: ID
+      strategy: check  # there are different strategies
+      check_cols: all # column with the timestamp (not date)
+      schema: snapshots

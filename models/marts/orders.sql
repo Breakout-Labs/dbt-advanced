@@ -31,14 +31,19 @@ joined as (
             deliveries_filtered.picked_up_at,
             deliveries_filtered.delivered_at
         ) as delivery_time_from_collection
+    , orders.store_id
     from orders
     left join deliveries_filtered
         on orders.order_id = deliveries_filtered.order_id
 ),
 
+addingStores as (
+    select j.*, s.store_name from joined j left join {{ ref('stores') }} s ON j.store_id = s.store_id
+),
+
 final as (
     select *
-    from joined
+    from addingStores 
 )
 
 select *
