@@ -30,7 +30,8 @@ normalize_order_status as (
 ),
 
 final as (
-    select *
+    select *,
+    current_timestamp as last_updated
     from normalize_order_status
 )
 
