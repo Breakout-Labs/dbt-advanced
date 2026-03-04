@@ -1,9 +1,15 @@
 -- models/staging/stg_ecomm__orders.sql
 with source as (
-    select *
-    from {{ source('ecomm', 'orders') }}
+    {{
+        dbt_utils.union_relations(
+            relations=[
+                source('ecomm', 'orders_us'),
+                source('ecomm', 'orders_de'),
+                source('ecomm', 'orders_au')
+            ]
+        )
+    }}
 ),
-
 
 order_status as (
     select *
@@ -12,7 +18,12 @@ order_status as (
 
 renamed as (
     select
-        *,
+        * exclude(store_id, _dbt_source_relation),
+        case
+            when _dbt_source_relation ilike '%orders_us' then 1
+            when _dbt_source_relation ilike '%orders_de' then 2
+            when _dbt_source_relation ilike '%orders_au' then 3
+        end as store_id,
         id as order_id,
         created_at as ordered_at
     from source

@@ -6,10 +6,3 @@ snapshots:
       strategy: check
       check_cols: all
       schema: snapshots
-  - name: orders_snapshot
-    relation: source('ecomm', 'orders')
-    config:
-      unique_key: id
-      strategy: timestamp
-      updated_at: _synced_at
-      schema: snapshots
