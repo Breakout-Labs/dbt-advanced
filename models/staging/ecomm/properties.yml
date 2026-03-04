@@ -6,3 +6,6 @@ models:
         tests:
           - not_null
           - unique
+      - name: store_id
+        tests:
+          - not_null
