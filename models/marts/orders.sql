@@ -1,24 +1,20 @@
 {{ config(materialized='table') }}
-
 with orders as (
     select *
     from {{ ref('stg_ecomm__orders') }}
 ),
-
 deliveries as (
     select *
     from {{ ref('stg_ecomm__deliveries') }}
 ),
-
 deliveries_filtered as (
     select *
     from deliveries
     where delivery_status = 'delivered'
 ),
-stores as (
-select * from {{ ref('stores') }}
+store_names as (
+    select * from {{ ref('stores') }}
 ),
-
 joined as (
     select
         orders.order_id,
@@ -26,7 +22,6 @@ joined as (
         orders.ordered_at,
         orders.order_status,
         orders.total_amount,
-        stores.store_name,
         datediff(
             'minutes', orders.ordered_at, deliveries_filtered.delivered_at
         ) as delivery_time_from_order,
@@ -38,13 +33,11 @@ joined as (
     from orders
     left join deliveries_filtered
         on orders.order_id = deliveries_filtered.order_id
-    left join stores using (store_id)
+    left join store_names on (orders.store_id = store_names.store_id)
 ),
-
 final as (
     select *
     from joined
 )
-
 select *
 from final
