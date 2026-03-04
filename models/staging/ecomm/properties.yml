@@ -1,0 +1,11 @@
+# models/staging/ecomm/properties.yml
+models: 
+  - name: stg_ecomm__orders
+    columns:
+      - name: order_id
+        tests:
+          - unique
+          - not_null
+      - name: store_id
+        tests:
+          - not_null
