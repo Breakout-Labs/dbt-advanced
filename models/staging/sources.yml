@@ -10,13 +10,13 @@ sources:
           - name: id
             description: '{{ doc("customer_id") }}'
             
-      - name: orders_us # This no longer has an orders alias
+      - name: orders_us
         description: Each record in this table represents an order in our ecommerce store in the US
 
-      - name: orders_de # This is new
+      - name: orders_de
         description: Each record in this table represents an order in our ecommerce store in Germany
 
-      - name: orders_au # This is new
+      - name: orders_au
         description: Each record in this table represents an order in our ecommerce store in Australia
 
       - name: deliveries
