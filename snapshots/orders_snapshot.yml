@@ -1,6 +1,6 @@
 snapshots:
   - name: orders_snapshot # tablename in the database
-    relation: source('ecomm', 'orders')
+    relation: source('ecomm', 'orders_us')
     config:
       unique_key: ID
       strategy: timestamp  # there are different strategies
