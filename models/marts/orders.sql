@@ -1,7 +1,7 @@
 {{ config(materialized="table") }}
 
 with
-    orders as (select * from {{ ref("stg_ecomm__orders") }}),
+    orders as (select * from {{ ref("stg_ecomm__orders_us") }}),
 
     deliveries as (select * from {{ ref("stg_ecomm__deliveries") }}),
 
