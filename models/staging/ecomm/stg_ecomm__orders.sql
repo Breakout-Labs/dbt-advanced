@@ -36,7 +36,7 @@ normalize_order_status as (
 
 final as (
     select 
-    * exclude(store_id),
+    * exclude (store_id),
     current_timestamp() as last_updated,
     case 
         when right(_dbt_source_relation, 2) = 'us' then 1
