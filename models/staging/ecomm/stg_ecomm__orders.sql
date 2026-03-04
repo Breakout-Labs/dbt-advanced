@@ -1,6 +1,24 @@
-with source as (
-    select *
-    from {{ source('ecomm', 'orders') }}
+with sources as (
+    {{
+        dbt_utils.union_relations(
+            relations=[
+                source('ecomm', 'orders_us'),
+                source('ecomm', 'orders_de'),
+                source('ecomm', 'orders_au')
+            ],
+        )
+    }}
+),
+
+add_store_id as (
+    select
+        * exclude (store_id),
+        case
+            when _dbt_source_relation ilike '%orders_us' then 1
+            when _dbt_source_relation ilike '%orders_de' then 2
+            when _dbt_source_relation ilike '%_orders_au' then 3
+        end as store_id
+    from sources
 ),
 
 order_status as (
@@ -13,7 +31,7 @@ renamed as (
         *,
         id as order_id,
         created_at as ordered_at,
-    from source
+    from add_store_id
 ),
 
 normalize_order_status as (
