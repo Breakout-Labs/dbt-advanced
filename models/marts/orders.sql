@@ -1,4 +1,8 @@
-{{ config(materialized='table') }}
+{{ config(
+    materialized='table',
+    snowflake_warehouse='TRANSFORMING_S'
+    )
+}}
 
 with orders as (
     select *
