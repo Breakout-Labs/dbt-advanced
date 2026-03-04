@@ -17,9 +17,12 @@ clean-targets:
   - "dbt_packages"
 
 models:
+  +tags: 'dbt_course'
   dbt_training:
     +materialized: view
   ## elementary models will be created in the schema '<your_schema>_elementary'
   ## for details, see docs: <https://docs.elementary-data.com/>
   elementary:
     +schema: "elementary"
+  
+  
