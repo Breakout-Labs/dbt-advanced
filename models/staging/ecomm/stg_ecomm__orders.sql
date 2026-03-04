@@ -1,6 +1,13 @@
 with source as (
-    select *
-    from {{ source('ecomm', 'orders') }}
+     {{
+            dbt_utils.union_relations(
+                relations=[
+                    source('ecomm', 'orders_us'),
+                    source('ecomm', 'orders_de'),
+                    source('ecomm', 'orders_au')
+                ],
+            )
+        }}
 ),
 
 order_status as (
@@ -28,7 +35,14 @@ normalize_order_status as (
 ),
 
 final as (
-    select *
+    select 
+    * exclude(store_id),
+    current_timestamp() as last_updated,
+    case 
+        when right(_dbt_source_relation, 2) = 'us' then 1
+        when right(_dbt_source_relation, 2) = 'de' then 2
+        when right(_dbt_source_relation, 2) = 'au' then 3
+    end as store_id
     from normalize_order_status
 )
 
