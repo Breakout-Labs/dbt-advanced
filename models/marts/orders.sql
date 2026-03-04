@@ -26,7 +26,7 @@ joined as (
         orders.order_id,
         orders.customer_id,
         orders.ordered_at,
-        orders.order_status,
+        --orders.order_status,
         orders.total_amount,
         store_names.store_name,
         datediff(
