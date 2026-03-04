@@ -1,6 +1,15 @@
 with source as (
-    select *
-    from {{ source('ecomm', 'orders') }}
+    -- select *
+    -- from {{ source('ecomm', 'orders_us') }}
+{{
+    dbt_utils.union_relations(
+        relations=[
+            source('ecomm', 'orders_us'),
+            source('ecomm', 'orders_de'),
+            source('ecomm', 'orders_au')
+        ],
+    )
+}}
 ),
 
 renamed as (
@@ -19,7 +28,7 @@ order_status as (
 
 normalize_order_status as (
     select
-        renamed.* exclude(order_status),
+        renamed.* exclude(order_status, store_id),
         -- quick & dirty, will fix later - Mike
         -- case 
         --     when order_status ilike any(
@@ -33,7 +42,12 @@ normalize_order_status as (
         --     else
         --         'Unknown'
         -- end as order_status_normalized
-        coalesce(order_status.order_status_normalized, 'Unknown') as order_status
+        coalesce(order_status.order_status_normalized, 'Unknown') as order_status,
+        case
+            when _dbt_source_relation ilike '%orders_us' then 1
+            when _dbt_source_relation ilike '%orders_de' then 2
+            when _dbt_source_relation ilike '%orders_au' then 3
+        end as store_id
     from renamed
     left join order_status on (
         renamed.order_status = order_status.order_status
