@@ -1,5 +1,11 @@
-{{ config(materialized='table') }}
-
+{{ 
+    config(
+        materialized='table',
+        snowflake_warehouse='TRANSFORMING_S',
+        tags=['a','b'],
+        query_tag='orders'
+    ) 
+}}
 with orders as (
     select *
     from {{ ref('stg_ecomm__orders') }}
