@@ -8,7 +8,7 @@
 with
     orders as (
         select *
-        from {{ ref("stg_ecomm__orders_us") }}
+        from {{ ref("stg_ecomm__orders") }}
         {% if is_incremental() %}
             where
                 ordered_at
