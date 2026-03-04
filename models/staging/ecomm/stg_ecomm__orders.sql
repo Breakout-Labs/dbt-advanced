@@ -1,3 +1,9 @@
+{{
+    config(
+        snowflake_warehouse='TRANSFORMING_S'
+    )
+}}
+
 with unioned as (
     {{ dbt_utils.union_relations(
         relations=[
