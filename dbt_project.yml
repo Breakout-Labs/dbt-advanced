@@ -17,7 +17,8 @@ clean-targets:
   - "dbt_packages"
 
 models:
+  +query_tag: 'dbt_course'
   dbt_training:
-    +materialized: view
+    +materialized: view  
   elementary:
     +schema: "elementary"
