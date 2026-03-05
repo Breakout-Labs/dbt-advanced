@@ -19,6 +19,12 @@ clean-targets:
 models:
   +query_tag: 'dbt_course'
   dbt_training:
+    +persist_docs:
+      relation: true
+      columns: true
     +materialized: view  
   elementary:
     +schema: "elementary"
+    
+flags:
+  require_generic_test_arguments_property: true
