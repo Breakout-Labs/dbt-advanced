@@ -55,9 +55,15 @@ addingKeys AS (
     from addingStores
 ),
 
+last_orders AS (
+    select *
+    , datediff('day', lag(ordered_at) over (partition by customer_id order by ordered_at asc), ordered_at) AS days_since_last_order
+     from addingKeys
+),
+
 final as (
     select *
-    from addingKeys 
+    from last_orders 
 )
 
 select *

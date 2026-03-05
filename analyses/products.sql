@@ -1,0 +1,5 @@
+select
+* 
+,  variant.value:title::text as product_title
+from raw.ecomm.products
+left join lateral flatten (input => products.variants) as variant

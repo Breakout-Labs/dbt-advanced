@@ -97,4 +97,8 @@ models:
       - name: nk_customer
         data_type: number
         description: ""
+      
+      - name: days_since_last_order
+        data_type: number
+        description: "Days since the last order took place compared to the current order"
 
