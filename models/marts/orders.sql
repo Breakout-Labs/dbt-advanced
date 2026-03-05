@@ -1,5 +1,11 @@
-{{ config(materialized='table',
-snowflake_warehouse='TRANSFORMING_S') }}
+{{ 
+config
+(
+materialized='table',
+snowflake_warehouse='TRANSFORMING_S',
+
+)
+}}
 
 with orders as (
     select *
@@ -18,11 +24,12 @@ deliveries_filtered as (
 ),
 store_table as (
     select *
-    from dbt_pbruunhaugen.stores
+    from {{ ref('stores') }}
 ),
 
 joined as (
     select
+        
         orders.order_id,
         orders.customer_id,
         orders.store_id,
@@ -30,14 +37,10 @@ joined as (
         orders.ordered_at,
         orders.order_status,
         orders.total_amount,
-        datediff(
-            'minutes', orders.ordered_at, deliveries_filtered.delivered_at
-        ) as delivery_time_from_order,
-        datediff(
-            'minutes',
-            deliveries_filtered.picked_up_at,
-            deliveries_filtered.delivered_at
-        ) as delivery_time_from_collection
+        datediff('minutes', orders.ordered_at, deliveries_filtered.delivered_at) as delivery_time_from_order,
+        datediff('minutes', deliveries_filtered.picked_up_at, deliveries_filtered.delivered_at) as delivery_time_from_collection,
+        greatest_ignore_nulls(orders._synced_at, deliveries_filtered._synced_at) as source_last_updated
+
     from orders
     left join deliveries_filtered
         on orders.order_id = deliveries_filtered.order_id
@@ -45,7 +48,12 @@ joined as (
 ),
 
 final as (
-    select *
+    select 
+        *,
+        {{ dbt_utils.generate_surrogate_key(['order_id']) }} as pk_orders,
+        {{ dbt_utils.generate_surrogate_key(['customer_id']) }} as hk_customer,
+
+        current_timestamp() as last_updated
     from joined
 )
 
