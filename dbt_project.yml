@@ -20,3 +20,6 @@ models:
   +query_tag: 'dbt_course'
   dbt_training:
     +materialized: view
+    +persist_docs:
+      relation: true
+      columns: true
