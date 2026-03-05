@@ -15,6 +15,8 @@ sources:
         description: Each record in this table represents an order in our ecommerce store in Germany
       - name: orders_au
         description: Each record in this table represents an order in our ecommerce store in Australia
+      - name: orders_au_duped # This is new for Lab 7
+        description: This table contains duplicate order records in our ecommerce store in Australia
       - name: deliveries
         description: Each record in this table represents an order delivery in our ecommerce application.
 

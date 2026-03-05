@@ -31,6 +31,7 @@ models:
     description: "All customer orders available."
     versions:
       - v: 1
+
     config:
       contract:
         enforced: true
@@ -91,4 +92,7 @@ models:
       - name: last_updated
         data_type: timestamp_ltz
         description: ""
-
+      
+      - name: days_since_last_order
+        data_type: number
+        description: ""
