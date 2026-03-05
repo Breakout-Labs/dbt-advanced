@@ -33,6 +33,8 @@ joined as (
             deliveries_filtered.delivered_at
         ) as delivery_time_from_collection
     , orders.store_id
+    , greatest_ignore_nulls(orders._synced_at, deliveries_filtered._synced_at) as source_last_updated
+    , current_timestamp() as last_updated
     from orders
     left join deliveries_filtered
         on orders.order_id = deliveries_filtered.order_id
@@ -42,9 +44,20 @@ addingStores as (
     select j.*, s.store_name from joined j left join {{ ref('stores') }} s ON j.store_id = s.store_id
 ),
 
+addingKeys AS (
+    select *
+    , {{ dbt_utils.generate_surrogate_key(['order_id']) }} as pk_orders
+    , order_id as nk_orders
+
+    , {{ dbt_utils.generate_surrogate_key(['customer_id']) }} as hk_customer
+    , customer_id as nk_customer
+
+    from addingStores
+),
+
 final as (
     select *
-    from addingStores 
+    from addingKeys 
 )
 
 select *
