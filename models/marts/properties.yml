@@ -81,6 +81,9 @@ models:
       - name: delivery_time_from_collection
         data_type: number
         description: ""
+      
+      - name: days_since_last_order
+        data_type: number
 
       - name: source_last_updated
         data_type: timestamp_ntz

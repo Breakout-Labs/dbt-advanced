@@ -25,6 +25,8 @@ sources:
         description: Each record in this table represents an order in our ecommerce store in Germany
       - name: orders_au
         description: Each record in this table represents an order in our ecommerce store in Australia
+      - name: orders_au_duped
+        description: duplicate order records in our ecommerce store in Australia
 
   - name: sheets
     database: raw
