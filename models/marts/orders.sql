@@ -33,6 +33,13 @@ joined as (
             deliveries_filtered.picked_up_at,
             deliveries_filtered.delivered_at
         ) as delivery_time_from_collection,
+          datediff(
+    'day',
+    lag(orders.ordered_at) over (
+        partition by orders.customer_id order by orders.ordered_at
+    ),
+    orders.ordered_at
+) as days_since_last_order,
         greatest_ignore_nulls(orders._synced_at, deliveries_filtered._synced_at) as source_last_updated,
         current_timestamp() as last_updated
     from orders
