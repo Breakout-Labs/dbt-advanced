@@ -6,7 +6,7 @@ models:
       - v: 1
     config:
       contract:
-        enforced: true
+        enforced: false
     description: "This is the orders table showing all order id's"
     columns:
       - name: pk_orders

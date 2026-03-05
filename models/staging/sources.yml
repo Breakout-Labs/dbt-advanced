@@ -17,6 +17,8 @@ sources:
         description: Each record in this table represents an order in our ecommerce store in Australia
       - name: deliveries
         description: Each record in this table represents an order delivery in our ecommerce application.
+      - name: orders_au_duped
+        description: blabla
 
   - name: sheets
     database: raw
@@ -27,3 +29,5 @@ sources:
     database: raw
     tables:
       - name: payments
+
+  

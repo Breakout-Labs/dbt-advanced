@@ -45,7 +45,15 @@ joined as (
 
 final as (
     select 
-        *
+        *,
+        datediff(
+        'day',
+        lag(ordered_at) over (
+            partition by customer_id
+            order by ordered_at
+        ),
+        ordered_at
+        ) as days_since_last_order
     from joined
 )
 
