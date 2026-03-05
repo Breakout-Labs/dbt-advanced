@@ -17,6 +17,10 @@ sources:
             tests:
               - unique
               - not_null
+
+      - name: _orders_au_duped
+        description: Duped_orders
+
       - name: deliveries
         description: Each record in this table represents an order delivery in our ecommerce application.
 
