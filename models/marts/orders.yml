@@ -1,0 +1,62 @@
+version: 2
+
+models:
+  - name: orders
+    versions:
+      - v: 1
+    config:
+      contract:
+        enforced: true
+    description: "This is the orders table showing all order id's"
+    columns:
+      - name: pk_orders
+        data_type: varchar
+        description: "this is te primary key for the orders table"
+        constraints:
+        - type: primary_key
+        tests:
+          - unique
+
+      - name: hk_customer
+        data_type: varchar
+        description: "this is the hash key targetting the customers table"
+
+      - name: order_id
+        data_type: varchar
+        description: ""
+
+      - name: customer_id
+        data_type: number
+        description: ""
+
+      - name: store_name
+        data_type: varchar
+        description: ""
+
+      - name: ordered_at
+        data_type: timestamp_ntz
+        description: ""
+
+      - name: order_status
+        data_type: varchar
+        description: ""
+
+      - name: total_amount
+        data_type: float
+        description: ""
+
+      - name: delivery_time_from_order
+        data_type: number
+        description: ""
+
+      - name: delivery_time_from_collection
+        data_type: number
+        description: ""
+
+      - name: source_last_updated
+        data_type: timestamp_ntz
+        description: ""
+
+      - name: last_updated
+        data_type: timestamp_ltz
+        description: ""
