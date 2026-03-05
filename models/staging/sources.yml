@@ -25,6 +25,9 @@ sources:
             tests:
               - unique
               - not_null
+      - name: orders_au_duped
+        description: This table contains duplicate order records in our ecommerce store in Australia
+
       - name: customers
         description: Each record in this table represents a customer in our ecommerce application.
         columns:
