@@ -36,6 +36,9 @@ models:
         data_type: timestamp_ntz
         description: Timestamp of the generated order
 
+      - name: days_since_last_order
+        data_type: number
+
       - name: order_status
         data_type: varchar
         description: Cleaned order status [Ordered, Shipped, Pending, Canceled, Delivered, Unknown]

@@ -1,10 +1,9 @@
 {{ 
-config
-(
-materialized='table',
-snowflake_warehouse='TRANSFORMING_S',
-
-)
+    config
+    (
+        materialized='table',
+        snowflake_warehouse='TRANSFORMING_S',
+    )
 }}
 
 with orders as (
@@ -22,6 +21,7 @@ deliveries_filtered as (
     from deliveries
     where delivery_status = 'delivered'
 ),
+
 store_table as (
     select *
     from {{ ref('stores') }}
@@ -29,18 +29,20 @@ store_table as (
 
 joined as (
     select
-        
         orders.order_id,
         orders.customer_id,
         orders.store_id,
         st.store_name,
         orders.ordered_at,
+        datediff('day',lag(ordered_at) 
+            over (partition by customer_id
+                  order by ordered_at), ordered_at
+        )as days_since_last_order,
         orders.order_status,
         orders.total_amount,
         datediff('minutes', orders.ordered_at, deliveries_filtered.delivered_at) as delivery_time_from_order,
         datediff('minutes', deliveries_filtered.picked_up_at, deliveries_filtered.delivered_at) as delivery_time_from_collection,
         greatest_ignore_nulls(orders._synced_at, deliveries_filtered._synced_at) as source_last_updated
-
     from orders
     left join deliveries_filtered
         on orders.order_id = deliveries_filtered.order_id
@@ -52,10 +54,8 @@ final as (
         *,
         {{ dbt_utils.generate_surrogate_key(['order_id']) }} as pk_orders,
         {{ dbt_utils.generate_surrogate_key(['customer_id']) }} as hk_customer,
-
         current_timestamp() as last_updated
     from joined
 )
 
-select *
-from final
+select * from final
