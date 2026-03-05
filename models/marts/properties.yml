@@ -73,3 +73,7 @@ models:
           - name: last_updated
             data_type: timestamp_ltz
             description: "Current timestamp of the table/record creation"
+          
+          - name: days_since_last_order
+            data_type: number
+            description: "Calculating the date difference between current order date and the previous order date for the customer"
