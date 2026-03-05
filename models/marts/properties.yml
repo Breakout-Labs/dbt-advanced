@@ -27,15 +27,66 @@ models:
           - greater_than_zero
 
   - name: orders
+    versions:
+      - v: 1
+    description: "A list of orders from the customers"
+    config:
+      contract:
+        enforced: true
     columns:
+      - name: pk_orders
+        constraints:
+          - type: primary_key
+        tests:
+          - unique
+        data_type: varchar
+        description: "Primary key in hash format"
+
+      - name: hk_customer
+        data_type: varchar
+        description: "Foreign key in hash format"
+
       - name: order_id
         tests:
           - unique
           - not_null
-      - name: delivery_time_from_collection
-        tests:
-          - greater_than_zero
+        data_type: varchar
+        description: "Primary key order in natural format"
+
+      - name: customer_id
+        data_type: number
+        description: "Customer key in natural format"
+
+      - name: ordered_at
+        data_type: timestamp_ntz
+        description: ""
+
+      - name: order_status
+        data_type: varchar
+        description: ""
+
+      - name: total_amount
+        data_type: float
+        description: ""
+
       - name: delivery_time_from_order
         tests:
           - greater_than_zero
+        data_type: number
+        description: ""
+
+      - name: delivery_time_from_collection
+        tests:
+          - greater_than_zero
+        data_type: number
+        description: ""
+
+      - name: source_last_updated
+        data_type: timestamp_ntz
+        description: ""
+
+      - name: last_updated
+        data_type: timestamp_ltz
+        description: ""
+
     
