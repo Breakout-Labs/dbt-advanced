@@ -16,5 +16,5 @@ final as (
     from renamed
 )
 
-select *
+select *, current_timestamp() as last_updated
 from final

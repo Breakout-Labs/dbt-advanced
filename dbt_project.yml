@@ -20,6 +20,9 @@ models:
   dbt_training:
     +query_tag: 'dbt_course'
     +materialized: view
+    +persist_docs:
+      relation: true
+      columns: true
 
   ## elementary models will be created in the schema '<your_schema>_elementary'
   ## for details, see docs: <https://docs.elementary-data.com/>
