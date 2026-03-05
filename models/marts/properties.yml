@@ -46,6 +46,9 @@ models:
         data_type: varchar
         description: "some hash key description"
 
+      - name: days_since_last_order
+        data_type: number
+
       - name: last_updated
         data_type: timestamp_ltz
         description: "bla bla"
