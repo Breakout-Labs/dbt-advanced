@@ -33,6 +33,9 @@ sources:
             tests:
               - unique
               - not_null
+      - name: orders_au_duped
+        description: This table deduplicates Australia order records
+      
       - name: deliveries
         description: Each record in this table represents an order delivery in our ecommerce application.
 
