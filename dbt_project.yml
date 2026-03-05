@@ -21,5 +21,11 @@ models:
   dbt_training:
     +materialized: view
     +query_tag: 'dbt_course'
+    +persist_docs:
+      relation: true
+      columns: true
   elementary:
     +schema: "elementary"
+
+flags:
+  require_generic_test_arguments_property: true

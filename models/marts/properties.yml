@@ -25,16 +25,73 @@ models:
       - name: average_delivery_time_from_order
         tests:
           - greater_than_zero
-
+  
   - name: orders
-    columns:
-      - name: order_id
-        tests:
-          - unique
-          - not_null
-      - name: delivery_time_from_collection
-        tests:
-          - greater_than_zero
-      - name: delivery_time_from_order
-        tests:
-          - greater_than_zero
+    config:
+      contract:
+        enforced: true
+    description: |
+     Orders data product from the dbt Training Lab with Simo and Marvin.
+     Each record represents a order from the e-commerce system.
+    versions:
+      - v: 1
+        columns:
+          - name: order_id
+            data_type: varchar
+            description: Source system generated order ID
+            tests:
+              - unique
+              - not_null
+          - name: customer_id
+            data_type: number
+            description: Source system generated customer ID
+
+          - name: ordered_at
+            data_type: timestamp_ntz
+            description: ""
+
+          - name: order_status
+            data_type: varchar
+            description: ""
+
+          - name: total_amount
+            data_type: float
+            description: ""
+
+          - name: store_name
+            data_type: varchar
+            description: ""
+
+          - name: source_last_updated
+            data_type: timestamp_ntz
+            description: ""
+
+          - name: delivery_time_from_order
+            data_type: number
+            description: ""
+            tests:
+              - greater_than_zero
+
+          - name: delivery_time_from_collection
+            data_type: number
+            description: ""
+            tests:
+              - greater_than_zero
+
+          - name: pk_orders
+            data_type: varchar
+            description: Unique Primary Key of this table based on the order_id
+            constraints:
+            - type: primary_key
+            tests:
+              - unique
+              - not_null
+
+          - name: hk_customer
+            data_type: varchar
+            description: ""
+
+          - name: last_updated
+            data_type: timestamp_ltz
+            description: ""
+
