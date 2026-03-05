@@ -43,6 +43,14 @@ final as (
         {{ dbt_utils.generate_surrogate_key(['order_id']) }} as pk_orders,
         {{ dbt_utils.generate_surrogate_key(['customer_id']) }} as hk_customer,
         *,
+        datediff(
+            'day',
+            lag(ordered_at) over (
+                partition by customer_id
+                order by ordered_at
+            ),
+            ordered_at
+        ) as days_since_last_order,
         current_timestamp() as last_updated
     from joined
 )
