@@ -82,7 +82,8 @@ models:
         description: Delivery time starting from the point of parcel pickup
         tests:
           - greater_than_zero
-
+      - name: days_since_last_order
+        data_type: number
       - name: store_name
         data_type: varchar
         description: Store name (country)
